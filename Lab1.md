@@ -16,7 +16,7 @@ If the input exceeds the 512 byte limit it will overflow the buffer and we as an
 ------
 
 [http.c:276]
-The program allocates 1024 bytes for a variable 'pn'. Then it uses the vulnerable 'strcat' function to append a string from pn to name.
+The program allocates 1024 bytes for a variable 'pn'. Then it uses the vulnerable 'strcat' function to append a string from 'pn' to 'name' variable.
 
 	char pn[1024]; // Here the program allocates the 1024 bytes
 	strcat(pn, name); // Here it uses the strcat function to append a copy of the source string to the destination variable 'name'
