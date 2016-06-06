@@ -29,3 +29,10 @@ The strcat function does not perform any bounds checking for the given string. I
 The program uses another vulnerable function - strcpy, which does not check buffer lengths and just copies given input into the buffer.
 
     strcpy(dst, dirname); // Here the program uses strcpy function to copy the 'dst' variable input into 'dirname' variable
+
+------
+
+Word about stack canaries here 
+...
+...
+...
