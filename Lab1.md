@@ -22,3 +22,9 @@ The program allocates 1024 bytes for a variable 'pn'. Then it uses the vulnerabl
 	strcat(pn, name); // Here it uses the strcat function to append a copy of the source string to the destination variable 'name'
 
 The strcat function does not perform any bounds checking for the given string. If we as an attacker provide more than the allocated 1024 bytes in the buffer for the 'pn' variable we can overflow the buffer.
+
+------
+
+[http.c:345]
+The program uses another vulnerable function - strcpy, which does not check buffer lengths and just copies given input into the buffer.
+	strcpy(dst, dirname); // Here the program uses strcpy function to copy the 'dst' variable input into 'dirname' variable
