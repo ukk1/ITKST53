@@ -9,26 +9,44 @@ The program allocates 8192 bytes for the variable 'buf' and 512 bytes for the va
 
     static char buf[8192];   // Here the program allocates the 8192 bytes for the variable 'buf'
     char envvar[512]; // Here it allocates 512 bytes for the variable 'envvar'
+    ...
+    ...
+    ...
     sprintf(envvar, "HTTP_%s", buf); // Here sprintf will copy the content of envvar to buf
 
 If the input exceeds the 512 byte limit it will overflow the buffer and we as an attacker will have control of the execution of the program. There are also other functions that does not perform bound checking and are prone to buffer overflow related attacks. 
 
 ------
 
-[http.c:276]
-The program allocates 1024 bytes for a variable 'pn'. Then it uses the vulnerable 'strcat' function to append a string from 'pn' to 'name' variable.
+[http.c:282]
+In the 'http_serve' function the program allocates 1024 bytes for a variable 'pn'. Then it uses the vulnerable 'strcat' function that does not perform bounds checking when concatenating to destination 'name'.
 
-    char pn[1024]; // Here the program allocates the 1024 bytes
+    void http_serve(int fd, const char *name)
+    {
+    void (*handler)(int, const char *) = http_serve_none;
+    char pn[1024];
+    struct stat st;
+
+    getcwd(pn, sizeof(pn));
+    setenv("DOCUMENT_ROOT", pn, 1);
+
     strcat(pn, name); // Here it uses the strcat function to append a copy of the source string to the destination variable 'name'
 
-The strcat function does not perform any bounds checking for the given string. If we as an attacker provide more than the allocated 1024 bytes in the buffer for the 'pn' variable we can overflow the buffer.
+If we as an attacker provide more than the allocated 1024 bytes in the buffer for the 'pn' variable we can overflow the buffer.
 
 ------
 
-[http.c:345]
-The program uses another vulnerable function - strcpy, which does not check buffer lengths and just copies given input into the buffer.
+[http.c:344]
+In the 'dir_join' function the program uses another vulnerable function - strcpy, which does not check buffer lengths and just copies given input into the buffer.
 
     strcpy(dst, dirname); // Here the program uses strcpy function to copy the 'dst' variable input into 'dirname' variable
+
+------
+
+[http.c:347]
+In the 'dir_join' function the program also uses 'strcat', which does not check buffer lengths and just concatenates user input as is.
+
+    strcat(dst, filename); // Here the program uses strcat function to copy the 'dst' variable input into 'filename' variable
 
 ------
 
