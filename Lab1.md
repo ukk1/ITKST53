@@ -1,6 +1,4 @@
-## Place your answers here.
-
-Exercise 1:
+## Zoobar HTTP Server vulnerabilities
 
 I first started to look for any vulnerable functions within the program that are known to be vulnerable to buffer overflows. OWASP states the following: "C library functions such as strcpy (), strcat (), sprintf () and vsprintf () operate on null terminated strings and perform no bounds checking." So these particular functions were the ones I was interested in if they were being used by the program.
 
@@ -49,6 +47,12 @@ In the 'dir_join' function the program also uses 'strcat', which does not check 
     strcat(dst, filename); // Here the program uses strcat function to copy the 'dst' variable input into 'filename' variable
 
 ------
+
+## Stack canaries
+
+------
+
+## Exploits
 
 For the second vulnerability we chose to exploit was how the zoobar HTTP server handles HTTP requests headers. If we as an attacker create an arbitrary header that exceeds the 'envvar' variable 512 bytes, we successfully corrupt the memory of the zoobar process.
 
@@ -132,5 +136,3 @@ For the buffer overflow exploit we were required to modify the Aleph One's shell
     	.ascii	STRING
 
 ------
-
-Word about stack canaries here 
