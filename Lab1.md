@@ -14,6 +14,13 @@ The program allocates 8192 bytes for the variable 'buf' and 512 bytes for the va
 
 If the input exceeds the 512 byte limit it will overflow the buffer and we as an attacker will have control of the execution of the program. There are also other functions that does not perform bound checking and are prone to buffer overflow related attacks. 
 
+For example, as an attack payload we can send the following HTTP Request that will overflow the buffer with a malicious HTTP header:
+
+    GET / HTTP/1.1
+    Host: 192.168.239.153
+    HTTP_BBBBBBBBBBBB.......BBBBBBBB: foo
+    Connection: Close
+
 ------
 
 [http.c:282]
