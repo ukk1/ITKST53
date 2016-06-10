@@ -50,6 +50,22 @@ In the 'dir_join' function the program also uses 'strcat', which does not check 
 
 ## Stack canaries
 
+Linux systems has a protection mechanism against buffer overflow attacks, known as canaries. The idea behind a stack canary is to place a 4-byte value onto the stack after the buffer and before the return pointer. The point in the canary is that if we as an attacker overflow the buffer and the canary value is not the same upon function completion as when it was pushed onto the stack, a function is called to terminate the process.
+
+There are three main types of canaries:
+######Terminator canary
+    0x00000aff & 0x000aff0d
+######Random canary
+    random 4-byte value protected in memory
+######Null canary
+    0x00000000
+
+The idea behind a terminator canary is to cause string operations to terminate when trying to overwrite the buffer and return pointer. It is possible for an attacker to place same value in the attack payload that will overwrite the terminator canary value and pass as valid.
+
+Random canary is more preferred method over terminator canary. It is a randomly generated 4-byte value placed onto the stack. It is important to use enough entropy when generating random 4-byte values as otherwise it can be possible for an attacker to brute force the canary value.
+
+Null canary is the weakest option of the three. The canary is a 4-byte value containing all 0s, this is very trivial for an attacker to bypass.
+
 ------
 
 ## Exploits
