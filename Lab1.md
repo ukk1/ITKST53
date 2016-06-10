@@ -135,4 +135,6 @@ For the buffer overflow exploit we were required to modify the Aleph One's shell
     	call	popladdr
     	.ascii	STRING
 
+We modified the STRING and STRLEN values to match the file path of the grades.txt and the length of the string. We also changed the syscall command from 'execve' to 'unlink'.
+
 ------
