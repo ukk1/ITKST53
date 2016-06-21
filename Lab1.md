@@ -161,4 +161,8 @@ For the buffer overflow exploit we were required to modify the Aleph One's shell
 
 We modified the STRING and STRLEN values to match the file path of the grades.txt and the length of the string. There was also an issue that if we used the unlink syscall directly it would be interpreted as a newline or \n, which would break the HTTP request that we would send to the Zoobar HTTP Server. We got around this by adding two times 5 bytes into lower bytes to get the unlink syscall.
 
+The new shellcode can be created as follows:
+
+    make shellcode.S shellcode.bin
+
 ------
