@@ -166,3 +166,12 @@ The new shellcode can be created as follows:
     make shellcode.S shellcode.bin
 
 ------
+
+## Ret-to-libc
+
+We can locate the unlink() system call address from gdb while we are attached to the zoobar process.
+
+    (gdb) p unlink
+    $1 = {<text variable, no debug info>} 0x40102450 <unlink>
+    
+The printed address is the one we will be using in our exploit to call the unlink sys call.
