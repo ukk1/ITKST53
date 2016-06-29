@@ -163,7 +163,7 @@ We modified the STRING and STRLEN values to match the file path of the grades.tx
 
 The new shellcode can be created as follows:
 
-    make shellcode.S shellcode.bin
+    httpd@vm-6858:~/lab$ make shellcode.S shellcode.bin
 
 ------
 
@@ -194,7 +194,7 @@ Now we need to locate the environment variable address in the memory. We used a 
     
 It is important to note that the environment variable we create is only good in the shell under which it is created. If we try to search the variable in another shell, we get an error:
 
-    ./getenv RM
+    httpd@vm-6858:~/lab$ ./getenv RM
     Environmental variable RM does not exist!
 
 The memory address of the environment variable is not always the exact address and usually it is necessary to deduce the environment variable address:
@@ -219,4 +219,4 @@ The final layout looks like this:
 
      AAAAAAAAAAAAAA   0xb7e6b100     0xb7e5e150     0xbffff8c5
     |--------------|--------------|--------------|--------------|
-         buffer         system()       exit()          env
+         buffer         system()       exit()         RM env
