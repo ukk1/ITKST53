@@ -244,3 +244,8 @@ The final layout looks like this:
      AAAAAAAAAAAAAA   0xb7e6b100     0xb7e5e150     0xbffff8c5
     |--------------|--------------|--------------|--------------|
          buffer         system()       exit()         RM env
+
+--------
+
+## Fixing buffer overflows
+
