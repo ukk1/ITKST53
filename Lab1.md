@@ -203,12 +203,12 @@ The memory address of the environment variable is not always the exact address a
 
 By counting backwards 5 bytes, we get the correct address, which is 0xbffff8c5. After modifying our exploit with the correct address we successfully unlink the grades.txt file.
 
-    [New process 2374]
-    process 2374 is executing new program: /bin/dash
-    [New process 2375]
-    process 2375 is executing new program: /usr/bin/unlink
+    [New process 2458]
+    process 2458 is executing new program: /bin/dash
+    [New process 2459]
+    process 2459 is executing new program: /usr/bin/unlink
     zookfs-nxstack: recvfd: Success
-    [Inferior 3 (process 2375) exited normally]
+    [Inferior 3 (process 2459) exited normally]
     
 The final layout looks like this:
 
