@@ -265,8 +265,13 @@ There is also a local file inclusion vulnerability, which allows us to read file
 
 The web server should have some sort of Access Control List (ACL) in place that checks and validates if users have access or permissions to run specific files in the environment.
 
-    zookfs-exstack: [2157] Request failed: File does not exist: /home/httpd/lab/etc/passwd
+    [http.c:301]
+    void http_serve_none(int fd, const char *pn)
+    {
+        http_err(fd, 404, "File does not exist: %s", pn);
+    }
 
     http://192.168.239.153:8080/zoobar/auth.py
     
+    zookfs-exstack: [2157] Request failed: File does not exist: /home/httpd/lab/etc/passwd
     
