@@ -253,17 +253,7 @@ The final layout looks like this:
 
 ## Other vulnerabilities in Zoobar
 
-There is an open redirection vulnerability in the HTTP Server. The nexturl parameter value is not being validated and it is possible to supply any arbitrary URL, which user will be redirected after login. The web server should validate and allow redirections only to approved URLs. The open redirection vulnerability only allows us to redirect users to other sites and using this attack against other users requires interaction from the victim, for example clicking the malicious link. The server handles other malicious input correctly by escaping the malicious tags and thus preventing attacks, such as XSS.
-
-It is recommended to use whitelisting approach for approved URLs and not to use dynamic URLs.
-
-    <input type="hidden" name="nexturl" value="http://192.168.239.153:8080/zoobar/index.cgi/&#34;&gt;&lt;script&gt;alert(1)&lt;/script&gt;">
-
-    http://192.168.239.153:8080/zoobar/index.cgi/login?nexturl=http://www.google.com
-    
---------
-    
-There is also a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server or other sensitive files, such as passwd. This vulnerability presents a clear security risk since it exposes sensitive configuration files and source code to users.
+There is a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server or other sensitive files, such as passwd. This vulnerability presents a clear security risk since it exposes sensitive configuration files and source code to users.
 
 The web server should have some sort of Access Control List (ACL) in place that checks and validates if users have access or permissions to run specific files in the environment.
 
