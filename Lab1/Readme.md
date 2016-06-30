@@ -1,6 +1,6 @@
 ##Buffer overflows
 
-### Zoobar HTTP Server vulnerabilities
+### Exercise 1
 
 I first started to look for any vulnerable functions within the program that are known to be vulnerable to buffer overflows. OWASP states the following: "C library functions such as strcpy (), strcat (), sprintf () and vsprintf () operate on null terminated strings and perform no bounds checking." So these particular functions were the ones I was interested in if they were being used by the program.
 
@@ -57,27 +57,7 @@ In the 'dir_join' function the program also uses 'strcat', which does not check 
 
 ------
 
-## Stack canaries
-
-Linux systems has a protection mechanism against buffer overflow attacks, known as canaries. The idea behind a stack canary is to place a 4-byte value onto the stack after the buffer and before the return pointer. The point in the canary is that if we as an attacker overflow the buffer and the canary value is not the same upon function completion as when it was pushed onto the stack, a function is called to terminate the process.
-
-There are three main types of canaries:
-######Terminator canary
-    0x00000aff & 0x000aff0d
-######Random canary
-    random 4-byte value protected in memory
-######Null canary
-    0x00000000
-
-The idea behind a terminator canary is to cause string operations to terminate when trying to overwrite the buffer and return pointer. It is possible for an attacker to place same value in the attack payload that will overwrite the terminator canary value and pass as valid.
-
-Random canary is more preferred method over terminator canary. It is a randomly generated 4-byte value placed onto the stack. It is important to use enough entropy when generating random 4-byte values as otherwise it can be possible for an attacker to brute force the canary value.
-
-Null canary is the weakest option of the three. The canary is a 4-byte value containing all 0s, this is very trivial for an attacker to bypass.
-
-------
-
-## Exploits
+###Exercise 2
 
 For the second vulnerability we chose to exploit was how the zoobar HTTP server handles HTTP requests headers. If we as an attacker create an arbitrary header that exceeds the 'envvar' variable 512 bytes, we successfully corrupt the memory of the zoobar process.
 
@@ -94,7 +74,7 @@ For the second vulnerability we chose to exploit was how the zoobar HTTP server 
 
     length = 100 # Initial length of 100 A's
 
-    while (length < 11000): # Stop once we've tried up to 3000 length
+    while (length < 3000): # Stop once we've tried up to 3000 length
         client = socket.socket(socket.AF_INET, socket.SOCK_STREAM) # Declare a TCP socket
         client.connect((host, port)) # Connect to user supplied port and IP address
 
@@ -136,11 +116,31 @@ If we look at the status of dmesg, we can see the following:
     es             0x7b	123
     fs             0x0	0
     gs             0x33	51
+    
+The full exploit code can be found from the exploit-2a.py file. It will overwrite the return address and inject the modified shellcode that will unlink the grades.txt file.
 
+#### Stack canaries
+
+Linux systems has a protection mechanism against buffer overflow attacks, known as canaries. The idea behind a stack canary is to place a 4-byte value onto the stack after the buffer and before the return pointer. The point in the canary is that if we as an attacker overflow the buffer and the canary value is not the same upon function completion as when it was pushed onto the stack, a function is called to terminate the process.
+
+There are three main types of canaries:
+######Terminator canary
+    0x00000aff & 0x000aff0d
+######Random canary
+    random 4-byte value protected in memory
+######Null canary
+    0x00000000
+
+The idea behind a terminator canary is to cause string operations to terminate when trying to overwrite the buffer and return pointer. It is possible for an attacker to place same value in the attack payload that will overwrite the terminator canary value and pass as valid.
+
+Random canary is more preferred method over terminator canary. It is a randomly generated 4-byte value placed onto the stack. It is important to use enough entropy when generating random 4-byte values as otherwise it can be possible for an attacker to brute force the canary value.
+
+Null canary is the weakest option of the three. The canary is a 4-byte value containing all 0s, this is very trivial for an attacker to bypass.
 
 ------
+###Exercise 3
 
-## Unlinking grades.txt
+####Mofidied Aleph One shellcode to unlink /home/httpd/grades.txt
 
 For the buffer overflow exploit we were required to modify the Aleph One's shellcode in a way that it will use the Linux syscall unlink that will remove the /home/httpd/grades.txt file from the machine. Below we have provided the modified shellcode.S file to achieve this goal:
 
@@ -186,10 +186,12 @@ We modified the STRING and STRLEN values to match the file path of the grades.tx
 The new shellcode can be created as follows:
 
     httpd@vm-6858:~/lab$ make shellcode.S shellcode.bin
+    
+The final exploit code for this exercise can be found in the exploit-3.py file.
 
 ------
 
-## Ret-to-libc
+###Exercise 4
 
 In the return to libc exercise we used the following technique to achieve the goal to unlink the grades.txt file:
 
@@ -246,12 +248,12 @@ The final layout looks like this:
      AAAAAAAAAAAAAA   0xb7e6b100     0xb7e5e150     0xbffff8c5
     |--------------|--------------|--------------|--------------|
          buffer         system()       exit()         RM env
+         
+The exploits for this exercise can be found from exploit-4a.py and exploit-4b.py files. They use different techniques, the exploit-4a.py uses the unlink system call and locates the /home/httpd/grades.txt string from the buffer. The exploit-4b.py uses an environment variable and system() function call, which executes the following environment variable "unlink /home/httpd/grades.txt"
 
 --------
 
-## Fixing buffer overflows
-
-## Other vulnerabilities in Zoobar
+###Exercise 5
 
 There is a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server or other sensitive files, such as passwd. This vulnerability presents a clear security risk since it exposes sensitive configuration files and source code to users.
 
