@@ -140,7 +140,7 @@ Null canary is the weakest option of the three. The canary is a 4-byte value con
 ------
 ###Exercise 3
 
-####Mofidied Aleph One shellcode to unlink /home/httpd/grades.txt
+######Mofidied Aleph One shellcode to unlink /home/httpd/grades.txt
 
 For the buffer overflow exploit we were required to modify the Aleph One's shellcode in a way that it will use the Linux syscall unlink that will remove the /home/httpd/grades.txt file from the machine. Below we have provided the modified shellcode.S file to achieve this goal:
 
