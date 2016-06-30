@@ -117,7 +117,7 @@ If we look at the status of dmesg, we can see the following:
     fs             0x0	0
     gs             0x33	51
     
-The full exploit code can be found from the exploit-2a.py file. It will overwrite the return address and inject the modified shellcode that will unlink the grades.txt file.
+The full exploit code can be found from the [exploit-2a.py](https://github.com/ukk1/ITKST53/blob/master/Lab1/exploit-2a.py) file. It will overwrite the return address and inject the modified shellcode that will unlink the grades.txt file.
 
 #### Stack canaries
 
@@ -187,7 +187,7 @@ The new shellcode can be created as follows:
 
     httpd@vm-6858:~/lab$ make shellcode.S shellcode.bin
     
-The final exploit code for this exercise can be found in the exploit-3.py file.
+The final exploit code for this exercise can be found in the [exploit-3.py](https://github.com/ukk1/ITKST53/blob/master/Lab1/exploit-3.py) file.
 
 ------
 
@@ -249,7 +249,7 @@ The final layout looks like this:
     |--------------|--------------|--------------|--------------|
          buffer         system()       exit()         RM env
          
-The exploits for this exercise can be found from exploit-4a.py and exploit-4b.py files. They use different techniques, the exploit-4a.py uses the unlink system call and locates the /home/httpd/grades.txt string from the buffer. The exploit-4b.py uses an environment variable and system() function call, which executes the following environment variable "unlink /home/httpd/grades.txt"
+The exploits for this exercise can be found from [exploit-4a.py](https://github.com/ukk1/ITKST53/blob/master/Lab1/exploit-4a.py) and [exploit-4b.py](https://github.com/ukk1/ITKST53/blob/master/Lab1/exploit-4b.py) files. They use different techniques, the exploit-4a.py uses the unlink system call and locates the /home/httpd/grades.txt string from the buffer. The exploit-4b.py uses an environment variable and system() function call, which executes the following environment variable "unlink /home/httpd/grades.txt"
 
 --------
 
