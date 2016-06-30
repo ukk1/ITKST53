@@ -1,4 +1,6 @@
-## Zoobar HTTP Server vulnerabilities
+##Buffer overflows
+
+### Zoobar HTTP Server vulnerabilities
 
 I first started to look for any vulnerable functions within the program that are known to be vulnerable to buffer overflows. OWASP states the following: "C library functions such as strcpy (), strcat (), sprintf () and vsprintf () operate on null terminated strings and perform no bounds checking." So these particular functions were the ones I was interested in if they were being used by the program.
 
