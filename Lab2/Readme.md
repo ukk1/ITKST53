@@ -96,3 +96,39 @@ Below are the changes made to the chroot-setup.sh file for this exercise. The mo
     chown 61014:61014 /jail/zoobar/index.cgi
 
 ### Exercise 5
+
+zoodb.py modifications:
+    
+    9: Added CredBase = declarative_base()
+    27: Added class Cred(TransferBase):
+                        __tablename__ = "cred"
+                        username = Column(String(128), primary_key=True)
+                        password = Column(String(128))
+                        token = Column(String(128))
+    58: Modified  print "Usage: %s [init-person|init-transfer|init-cred]" % sys.argv[0]
+    66: Added     elif cmd == 'init-cred':
+                        cred_setup()
+                        
+zook.conf modifications:
+
+    45: Added [auth_svc]
+                    cmd = /zoobar/auth-server.py
+                    args = /authsvc/sock
+                    dir = /jail
+                    uid = 61015
+                    gid = 61015
+ 
+chroot-setup.sh database right modifications:
+
+    python /jail/zoobar/zoodb.py init-cred
+    
+    chown -hR 61012:61012 /jail/zoobar/db/transfer/transfer.db
+    chown -hR 61012:61012 /jail/zoobar/db/person/person.db # sets rights to the databases
+    chmod 330 /jail/zoobar/db
+    chown 61012:61012 /jail/zoobar/db/person
+    chmod 330 /jail/zoobar/db/person
+    chown 61012:61012 /jail/zoobar/db/transfer
+    chmod 330 /jail/zoobar/db/transfer
+    chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
+    chown 61015:61015 /jail/zoobar/db/cred
+    chmod 300 /jail/zoobar/db/cred

@@ -57,6 +57,7 @@ mkdir -p /jail/usr/share/zoneinfo
 cp -r /usr/share/zoneinfo/America /jail/usr/share/zoneinfo/
 
 create_socket_dir /jail/echosvc 61010:61010 755
+create_socket_dir /jail/authsvc 61015:61015 755
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp
@@ -71,13 +72,17 @@ chown -hR 61013:61013 /jail/zoobar/ #sets permissions for zoofs to the folder an
 
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
+python /jail/zoobar/zoodb.py init-cred
 
-chown -hR 61012:61012 /jail/zoobar/db/ # sets rights to the databases
+chown -hR 61012:61012 /jail/zoobar/db/transfer/transfer.db
+chown -hR 61012:61012 /jail/zoobar/db/person/person.db # sets rights to the databases
 chmod 330 /jail/zoobar/db
 chown 61012:61012 /jail/zoobar/db/person
 chmod 330 /jail/zoobar/db/person
 chown 61012:61012 /jail/zoobar/db/transfer
 chmod 330 /jail/zoobar/db/transfer
+chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
+chown 61015:61015 /jail/zoobar/db/cred
+chmod 300 /jail/zoobar/db/cred
 
 chown 61014:61014 /jail/zoobar/index.cgi
-
