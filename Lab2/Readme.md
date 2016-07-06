@@ -12,6 +12,14 @@
 
 ###Exercise 3
 
-    setresuid(uid, uid, uid);
-    setresgid(gid, gid, gid);
-    setgroups(ngids, gids);
+    if ((dir = NCONF_get_string(conf, name, "dir")))
+    {
+        /* chroot into dir */
+        if (chroot(dir) == 0); {
+                chdir("/");
+        }
+
+        setresuid(uid, uid, uid);
+        setresgid(gid, gid, gid);
+        setgroups(ngids, gids);
+    }
