@@ -67,6 +67,5 @@ mknod /jail/dev/urandom c 1 9
 cp -r zoobar /jail/
 rm -rf /jail/zoobar/db
 
-#set_perms 61013:61013 /jail/zoobar/index.cgi
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
