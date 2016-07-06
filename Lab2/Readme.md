@@ -29,21 +29,18 @@ In exercise 3 we modified the zookld.c file to support user and group IDs as wel
 Next we modified the zook.conf file to run the services other than root.
 
     [zookd]
-    cmd = zookd
-    uid = 61011
-    gid = 61011
-    dir = /jail
+        cmd = zookd
+        uid = 61011
+        gid = 61011
+        dir = /jail
 
     [zookfs_svc]
-    cmd = zookfs
-    url = .*
-    uid = 61012
-    gid = 61012
-    dir = /jail
-    # You can control what executables zookfs will run as CGI scripts
-    # by specifying the UID/GID of allowed CGI executables, as follows;
-    # uncomment and replace 123 and 456 with your intended UID and GID:
-    args = 61012 61012
+        cmd = zookfs
+        url = .*
+        uid = 61012
+        gid = 61012
+        dir = /jail
+        args = 61012 61012
     
 We also had to modify the chroot-setup.sh file to move and setup correct permissions for the files so that zookfs process will run correctly.
 
@@ -56,3 +53,44 @@ We also had to modify the chroot-setup.sh file to move and setup correct permiss
     chown -hR 61012:61012 /jail/zoobar/db/ # sets rights to the databases
 
 ###Exercise 4
+
+For this exercise, we had to modify the zook.conf file to separate dynamic and static content. Also modification for the chroot-setup.sh file was needed to have the server working properly with these new changes.
+
+    [zook]
+        port       = 8080
+        # To run multiple services, list them separated by commas, like:
+        #  http_svcs = first_svc, second_svc
+        http_svcs  =  dynamic_svc, static_svc
+        extra_svcs = echo_svc
+
+    [dynamic_svc]
+        cmd = zookfs
+        url = .*cgi.*(login|logout|echo|users|transfer|zoobarjs|) #serve only the provided python files
+        uid = 61012
+        gid = 61012
+        dir = /jail
+        args = 61014 61014 #uid and guid, which are used to run index.cgi file
+
+    [static_svc]
+        cmd = zookfs
+        url = .*
+        uid = 61013
+        gid = 61013
+        dir = /jail
+        args = 123 456 #static_svc requires some argument to work properly
+
+Below are the changes made to the chroot-setup.sh file for this exercise. The modifications will make the static_svc uid and guid as the owner of the /jail/zoobar folder and other dynamic content, such as index.cgi and db folder is owned by the dynamic_svc uid and guid.
+
+    chown -hR 61013:61013 /jail/zoobar/ #sets permissions for static_svc uid and guid
+
+    python /jail/zoobar/zoodb.py init-person
+    python /jail/zoobar/zoodb.py init-transfer
+
+    chown -hR 61012:61012 /jail/zoobar/db/ # sets rights to the databases for dynamic_svc
+    chmod 330 /jail/zoobar/db
+    chown 61012:61012 /jail/zoobar/db/person
+    chmod 330 /jail/zoobar/db/person
+    chown 61012:61012 /jail/zoobar/db/transfer
+    chmod 330 /jail/zoobar/db/transfer
+
+    chown 61014:61014 /jail/zoobar/index.cgi
