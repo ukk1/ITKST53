@@ -67,12 +67,17 @@ mknod /jail/dev/urandom c 1 9
 cp -r zoobar /jail/
 rm -rf /jail/zoobar/db
 
-set_perms 61012:61012 755 /jail/zoobar/ #sets permissions for zoofs to the folder
-#set_perms 61012:61012 755 /jail/zoobar/*.*
-chown -hR 61012:61012 /jail/zoobar/ #sets permissions for zoofs to the folder and subfolders
-chmod -R 755 /jail/zoobar/ #sets execute permissions for zoofs to the folder
+chown -hR 61013:61013 /jail/zoobar/ #sets permissions for zoofs to the folder and subfolders
 
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
+
 chown -hR 61012:61012 /jail/zoobar/db/ # sets rights to the databases
+chmod 330 /jail/zoobar/db
+chown 61012:61012 /jail/zoobar/db/person
+chmod 330 /jail/zoobar/db/person
+chown 61012:61012 /jail/zoobar/db/transfer
+chmod 330 /jail/zoobar/db/transfer
+
+chown 61014:61014 /jail/zoobar/index.cgi
 
