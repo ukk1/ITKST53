@@ -9,3 +9,9 @@
                 chdir("/");
         } 
     }
+
+###Exercise 3
+
+    setresuid(uid, uid, uid);
+    setresgid(gid, gid, gid);
+    setgroups(ngids, gids);
