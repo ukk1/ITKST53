@@ -54,3 +54,5 @@ We also had to modify the chroot-setup.sh file to move and setup correct permiss
     python /jail/zoobar/zoodb.py init-person
     python /jail/zoobar/zoodb.py init-transfer
     chown -hR 61012:61012 /jail/zoobar/db/ # sets rights to the databases
+
+###Exercise 4
