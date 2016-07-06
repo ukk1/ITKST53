@@ -94,3 +94,5 @@ Below are the changes made to the chroot-setup.sh file for this exercise. The mo
     chmod 330 /jail/zoobar/db/transfer
 
     chown 61014:61014 /jail/zoobar/index.cgi
+
+### Exercise 5
