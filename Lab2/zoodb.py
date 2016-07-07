@@ -24,7 +24,7 @@ class Transfer(TransferBase):
     amount = Column(Integer)
     time = Column(String)
 
-class Cred(TransferBase):
+class Cred(CredBase):
     __tablename__ = "cred"
     username = Column(String(128), primary_key=True)
     password = Column(String(128))
@@ -50,7 +50,7 @@ def transfer_setup():
     return dbsetup("transfer", TransferBase)
 
 def cred_setup():
-    return dbsetup("cred", TransferBase)
+    return dbsetup("cred", CredBase)
 
 import sys
 if __name__ == "__main__":
