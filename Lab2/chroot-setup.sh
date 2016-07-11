@@ -105,7 +105,10 @@ chmod 660 /jail/zoobar/db/transfer/transfer.db
 # TODO: User rights, works with chmod -R 777 but not without the rights
 # they should
 #chmod -R 777 /jail/zoobar/db/ 
+#chmod -R 777 /jail/zoobar/db/person
+#set_perms 61012 770 /jail/zoobar/db/person/person.db 
 
 chown 61014:61014 /jail/zoobar/index.cgi
+
 
 
