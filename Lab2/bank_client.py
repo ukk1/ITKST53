@@ -10,7 +10,15 @@ def transfer(sender, recipient, zoobars):
     arguments = {'sender': sender, 'recipient': recipient, 'zoobars': zoobars}
     return conn.call('transfer', **arguments)
 
-def balance(sender, recipient, zoobars):
+def balance(username):
     ## Fill in code here.
     arguments = {'username': username}
-    return conn.call('transfer', **arguments)
+    return conn.call('balance', **arguments)
+
+def newaccount(username):
+    arguments = {'username': username}
+    return conn.call('newaccount', **arguments)
+
+def get_log(username):
+    arguments = {'username': username}
+    return conn.call('get_log', **arguments)

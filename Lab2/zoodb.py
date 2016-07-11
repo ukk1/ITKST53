@@ -1,3 +1,4 @@
+
 from sqlalchemy import *
 from sqlalchemy.orm import *
 from sqlalchemy.ext.declarative import *
@@ -14,7 +15,7 @@ class Person(PersonBase):
     username = Column(String(128), primary_key=True)
 #    password = Column(String(128)) # Remove when auth working
 #    token = Column(String(128))  # Remove when auth working
-    zoobars = Column(Integer, nullable=False, default=10) #TODO: Remove when bank working
+#    zoobars = Column(Integer, nullable=False, default=10) #TODO: Remove when bank working
     profile = Column(String(5000), nullable=False, default="")
 
 class Transfer(TransferBase):
