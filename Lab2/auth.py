@@ -1,8 +1,23 @@
 from zoodb import *
 from debug import *
-
+from os import urandom
 import hashlib
 import random
+import pbkdf2
+import binascii
+
+def hash_pwd(password):
+    salt = urandom(8)
+    saltedpass = binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32))
+    return saltedpass, binascii.hexlify(salt)    
+
+def check_pwd(password): #TODO: Taa toimimaan
+    creddb = cred_setup()
+    salt = creddb.query(Cred).get(salt)
+    if password == pbkdf2.PBKDF2(password, salt).hexread(32):
+	return True
+    else:
+	return False        
 
 def newtoken(db, cred):
     hashinput = "%s%.10f" % (cred.password, random.random())
@@ -33,7 +48,7 @@ def register(username, password):
     newperson.username = username
     newcred.username = username
 
-    newcred.password = password    
+    newcred.password, newcred.salt = hash_pwd(password)    
     
     persondb.add(newperson)
     creddb.add(newcred)

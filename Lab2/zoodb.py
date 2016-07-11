@@ -11,8 +11,8 @@ CredBase = declarative_base()
 class Person(PersonBase):
     __tablename__ = "person"
     username = Column(String(128), primary_key=True)
-    password = Column(String(128)) # Remove when auth working
-    token = Column(String(128))  # Remove when auth working
+#    password = Column(String(128)) # Remove when auth working
+#    token = Column(String(128))  # Remove when auth working
     zoobars = Column(Integer, nullable=False, default=10)
     profile = Column(String(5000), nullable=False, default="")
 
@@ -27,8 +27,9 @@ class Transfer(TransferBase):
 class Cred(CredBase):
     __tablename__ = "cred"
     username = Column(String(128), primary_key=True)
-    password = Column(String(128))
+    password = Column(UnicodeText(128))
     token = Column(String(128))
+    salt = Column(UnicodeText(128))
 
 def dbsetup(name, base):
     thisdir = os.path.dirname(os.path.abspath(__file__))
