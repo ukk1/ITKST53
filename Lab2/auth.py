@@ -7,14 +7,14 @@ import pbkdf2
 import binascii
 
 def hash_pwd(password):
-    salt = urandom(8)
+    salt = binascii.hexlify(urandom(8))
     saltedpass = binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32))
-    return saltedpass, binascii.hexlify(salt)    
+    return saltedpass, salt    
 
 def check_pwd(password): #TODO: Taa toimimaan
     creddb = cred_setup()
     salt = creddb.query(Cred).get(salt)
-    if password == pbkdf2.PBKDF2(password, salt).hexread(32):
+    if password == binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32)):
 	return True
     else:
 	return False        
@@ -30,7 +30,7 @@ def login(username, password):
     cred = db.query(Cred).get(username)
     if not cred:
         return None
-    if cred.password == password:
+    if check_pwd:#cred.password == password:
         return newtoken(db, cred)
     else:
         return None
