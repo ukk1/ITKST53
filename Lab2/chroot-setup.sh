@@ -102,7 +102,9 @@ chmod 600 /jail/zoobar/db/cred/cred.db
 chown 61012:61012 /jail/zoobar/db/transfer/transfer.db
 chmod 660 /jail/zoobar/db/transfer/transfer.db
 
-chmod -R 777 /jail/zoobar/db/ 
+# TODO: User rights, works with chmod -R 777 but not without the rights
+# they should
+#chmod -R 777 /jail/zoobar/db/ 
 
 chown 61014:61014 /jail/zoobar/index.cgi
 
