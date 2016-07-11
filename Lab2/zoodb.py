@@ -11,8 +11,8 @@ CredBase = declarative_base()
 class Person(PersonBase):
     __tablename__ = "person"
     username = Column(String(128), primary_key=True)
-    password = Column(String(128)) # TODO: Remove when auth working, moved to cred table
-    token = Column(String(128))  # TODO: Remove when auth working, moved to cred table
+    password = Column(String(128)) # Remove when auth working
+    token = Column(String(128))  # Remove when auth working
     zoobars = Column(Integer, nullable=False, default=10)
     profile = Column(String(5000), nullable=False, default="")
 
@@ -67,3 +67,4 @@ if __name__ == "__main__":
         cred_setup()
     else:
         raise Exception("unknown command %s" % cmd)
+

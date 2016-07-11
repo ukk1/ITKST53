@@ -18,3 +18,4 @@ class AuthRpcServer(rpclib.RpcServer):
 
 s = AuthRpcServer()
 s.run_sockpath_fork(sockpath)
+

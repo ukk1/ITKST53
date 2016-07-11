@@ -68,21 +68,42 @@ mknod /jail/dev/urandom c 1 9
 cp -r zoobar /jail/
 rm -rf /jail/zoobar/db
 
-chown -hR 61013:61013 /jail/zoobar/ #sets permissions for zoofs to the folder and subfolders
+#chown -hR 61013:61013 /jail/zoobar/ #sets permissions for zoofs to the folder and subfolders
+#chown 61015:61015 /jail/zoobar/auth-server.py
 
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 python /jail/zoobar/zoodb.py init-cred
 
-chown -hR 61012:61012 /jail/zoobar/db/transfer/transfer.db
-chown -hR 61012:61012 /jail/zoobar/db/person/person.db # sets rights to the databases
-chmod 330 /jail/zoobar/db
-chown 61012:61012 /jail/zoobar/db/person
+#chown -hR 61012:61012 /jail/zoobar/db/transfer/transfer.db
+#chown -hR 61012:61012 /jail/zoobar/db/person/person.db # sets rights to the databases
+#chmod 770 /jail/zoobar/db
+#chown 61012:61012 /jail/zoobar/db/person
+#chmod 770 /jail/zoobar/db/person
+#chmod 770 /jail/zoobar/db/person/person.db
+#chown 61012:61012 /jail/zoobar/db/transfer
+#chmod 660 /jail/zoobar/db/transfer
+#chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
+#chown 61015:61015 /jail/zoobar/db/cred
+#chmod 700 /jail/zoobar/db/cred
+#chmod 600 /jail/zoobar/db/cred/cred.db
+
+chown 61012:61012 /jail/zoobar/db/person/
 chmod 330 /jail/zoobar/db/person
-chown 61012:61012 /jail/zoobar/db/transfer
+chown 61015:61015 /jail/zoobar/db/cred/
+chmod 300 /jail/zoobar/db/cred/
+chown 61012:61012 /jail/zoobar/db/transfer/
 chmod 330 /jail/zoobar/db/transfer
-chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
-chown 61015:61015 /jail/zoobar/db/cred
-chmod 300 /jail/zoobar/db/cred
+
+chown 61012:61012 /jail/zoobar/db/person/person.db
+chmod 660 /jail/zoobar/db/person/person.db
+chown 61015:61015 /jail/zoobar/db/cred/cred.db
+chmod 600 /jail/zoobar/db/cred/cred.db
+chown 61012:61012 /jail/zoobar/db/transfer/transfer.db
+chmod 660 /jail/zoobar/db/transfer/transfer.db
+
+chmod -R 777 /jail/zoobar/db/ 
 
 chown 61014:61014 /jail/zoobar/index.cgi
+
+
