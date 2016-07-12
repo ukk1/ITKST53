@@ -5,10 +5,12 @@ import rpclib
 socket = "/banksvc/sock"
 conn = rpclib.client_connect(socket)
 
-def transfer(sender, recipient, zoobars):
-    ## Fill in code here.
-    arguments = {'sender': sender, 'recipient': recipient, 'zoobars': zoobars}
-    return conn.call('transfer', **arguments)
+def transfer(sender, recipient, zoobars, token):
+    if validate(sender, token): # TODO: Check if this is actually working
+        arguments = {'sender': sender, 'recipient': recipient, 'zoobars': zoobars}
+        return conn.call('transfer', **arguments)
+    else:
+	return
 
 def balance(username):
     ## Fill in code here.
@@ -22,3 +24,8 @@ def newaccount(username):
 def get_log(username):
     arguments = {'username': username}
     return conn.call('get_log', **arguments)
+
+def validate(sender, token):
+    arguments = {'username': sender, 'token': token}
+    conn2 = rpclib.client_connect("/authsvc/sock")
+    return conn2.call('check_token', **arguments)
