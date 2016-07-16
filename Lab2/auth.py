@@ -52,7 +52,6 @@ def register(username, password):
     
     persondb.add(newperson)
     creddb.add(newcred)
-
     persondb.commit()
 
     creddb.commit()

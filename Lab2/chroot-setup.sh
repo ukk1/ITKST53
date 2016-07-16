@@ -59,6 +59,7 @@ cp -r /usr/share/zoneinfo/America /jail/usr/share/zoneinfo/
 create_socket_dir /jail/echosvc 61010:61010 755
 create_socket_dir /jail/authsvc 61015:61015 755
 create_socket_dir /jail/banksvc 61016:61016 755
+create_socket_dir /jail/profilesvc 61017:61017 755
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp
@@ -69,34 +70,19 @@ mknod /jail/dev/urandom c 1 9
 cp -r zoobar /jail/
 rm -rf /jail/zoobar/db
 
-#chown -hR 61013:61013 /jail/zoobar/ #sets permissions for zoofs to the folder and subfolders
-#chown 61015:61015 /jail/zoobar/auth-server.py
-
 python /jail/zoobar/zoodb.py init-person
 python /jail/zoobar/zoodb.py init-transfer
 python /jail/zoobar/zoodb.py init-cred
 python /jail/zoobar/zoodb.py init-bank
-
-#chown -hR 61012:61012 /jail/zoobar/db/transfer/transfer.db
-#chown -hR 61012:61012 /jail/zoobar/db/person/person.db # sets rights to the databases
-#chmod 770 /jail/zoobar/db
-#chown 61012:61012 /jail/zoobar/db/person
-#chmod 770 /jail/zoobar/db/person
-#chmod 770 /jail/zoobar/db/person/person.db
-#chown 61012:61012 /jail/zoobar/db/transfer
-#chmod 660 /jail/zoobar/db/transfer
-#chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
-#chown 61015:61015 /jail/zoobar/db/cred
-#chmod 700 /jail/zoobar/db/cred
-#chmod 600 /jail/zoobar/db/cred/cred.db
 
 chown 61012:61012 /jail/zoobar/db/person/
 chmod 330 /jail/zoobar/db/person
 chown 61015:61015 /jail/zoobar/db/cred/
 chmod 300 /jail/zoobar/db/cred/
 chown 61012:61012 /jail/zoobar/db/transfer/
-chmod 330 /jail/zoobar/db/transfer
-chmod 300 /jail/zoobar/db/bank
+chmod 330 /jail/zoobar/db/transfer/
+chown 61016:61016 /jail/zoobar/db/bank/
+chmod 300 /jail/zoobar/db/bank/
 
 chown 61012:61012 /jail/zoobar/db/person/person.db
 chmod 660 /jail/zoobar/db/person/person.db
@@ -110,7 +96,7 @@ chmod 600 /jail/zoobar/db/bank/bank.db
 # TODO: User rights, works with chmod -R 777 but not without the rights
 # they should
 #chmod -R 777 /jail/zoobar/db/ 
-#chmod -R 777 /jail/zoobar/db/person
+#chmod -R 777 /jail/zoobar/db/bank
 #set_perms 61012 770 /jail/zoobar/db/person/person.db 
 
 chown 61014:61014 /jail/zoobar/index.cgi
