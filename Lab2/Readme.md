@@ -4,11 +4,12 @@
 
     if ((dir = NCONF_get_string(conf, name, "dir")))
     {
-        /* chroot into dir */
-        if (chroot(dir) == 0); {
-                chdir("/");
-        } 
-    }
+	if (chroot(dir)) {
+	 return 1;
+	}
+	if (chdir("/")) {
+		return 1;
+	}
 
 ###Exercise 3
 
@@ -16,14 +17,15 @@ In exercise 3 we modified the zookld.c file to support user and group IDs as wel
 
     if ((dir = NCONF_get_string(conf, name, "dir")))
     {
-        /* chroot into dir */
-        if (chroot(dir) == 0); {
-                chdir("/");
-        }
-
-        setresuid(uid, uid, uid);
-        setresgid(gid, gid, gid);
-        setgroups(ngids, gids);
+	if (chroot(dir)) {
+	 return 1;
+	}
+	if (chdir("/")) {
+		return 1;
+	}
+    setresgid(gid, gid, gid);
+    setresuid(uid, uid, uid);
+    setgroups(ngids, gids);
     }
 
 Next we modified the zook.conf file to run the services other than root.
