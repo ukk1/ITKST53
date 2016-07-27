@@ -51,4 +51,6 @@ In this exercise we can retrieve the information from the zoobarjs file to see i
         }
     </script>
 
+The answer-2.html file must be located in the same folder as the answer-3.html file so that the CSRF attack works as expected.
+
 ###Exercise 4: Profile Worm
