@@ -283,6 +283,50 @@ transfer.py:
         
 ### Exercise 9
 
+Modified profile-server.py:
+
+    def rpc_run(self, pcode, user, visitor):
+        uid = 61017
+
+        userdir = '/tmp'
+        ...
+        
+
+
 ### Exercise 10
 
 ### Exercise 11
+
+Modified profile-server.py to change privileges:
+
+    def __init__(self, user, visitor):
+        self.user = user
+        self.visitor = visitor
+        os.chdir('/tmp')
+        os.setgid(61012)
+        os.setuid(61016)
+        
+### Endnotes
+
+At the end we revised all the rights in chroot-setup and tried to reduce them as much as possible:
+
+    chown 61012:61012 /jail/zoobar/db/person/
+    chmod 330 /jail/zoobar/db/person
+    chown 61015:61015 /jail/zoobar/db/cred/
+    chmod 300 /jail/zoobar/db/cred/
+    chown 61012:61012 /jail/zoobar/db/transfer/
+    chmod 330 /jail/zoobar/db/transfer/
+    chown 61016:61016 /jail/zoobar/db/bank/
+    chmod 300 /jail/zoobar/db/bank/
+    
+    chown 61012:61012 /jail/zoobar/db/person/person.db
+    chmod 660 /jail/zoobar/db/person/person.db
+    chown 61015:61015 /jail/zoobar/db/cred/cred.db
+    chmod 600 /jail/zoobar/db/cred/cred.db
+    chown 61012:61012 /jail/zoobar/db/transfer/transfer.db
+    chmod 660 /jail/zoobar/db/transfer/transfer.db
+    chown 61016:61016 /jail/zoobar/db/bank/bank.db
+    chmod 600 /jail/zoobar/db/bank/bank.db
+    
+    
+    chown 61014:61014 /jail/zoobar/index.cgi
