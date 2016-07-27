@@ -15,9 +15,9 @@ def check_pwd(password): #TODO: Taa toimimaan
     creddb = cred_setup()
     salt = creddb.query(Cred).get(salt)
     if password == binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32)):
-	return True
+        return True
     else:
-	return False        
+        return False
 
 def newtoken(db, cred):
     hashinput = "%s%.10f" % (cred.password, random.random())
@@ -30,7 +30,7 @@ def login(username, password):
     cred = db.query(Cred).get(username)
     if not cred:
         return None
-    if check_pwd:#cred.password == password:
+    if check_pwd:
         return newtoken(db, cred)
     else:
         return None

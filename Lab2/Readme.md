@@ -116,7 +116,7 @@ zook.conf modifications:
                     args = /authsvc/sock
                     dir = /jail
                     uid = 61015
-                    gid = 61015
+                    gid = 61012 # gid same as dynamic_svc because this needs to access persondb
  
 chroot-setup.sh database right modifications:
 
@@ -132,3 +132,155 @@ chroot-setup.sh database right modifications:
     chown -hR 61015:61015 /jail/zoobar/db/cred/cred.db
     chown 61015:61015 /jail/zoobar/db/cred
     chmod 300 /jail/zoobar/db/cred
+    
+  
+In addition we also needed to make multiple changes to login.py to use the new auth service instead of the old functionality and
+modify auth.py so that it adds entries to both persondb and creddb when registering.
+
+### Exercise 6
+
+Added "salt = Column(UnicodeText(128))" to the cred-database initialization.
+
+Added hash_pwd(password) and check_pwd(password) functions to auth.py
+Also modified to login function to use the new check_pwd and register to use
+new hash_pwd:
+
+    def hash_pwd(password):
+        salt = binascii.hexlify(urandom(8))
+        saltedpass = binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32))
+        return saltedpass, salt
+    
+    def check_pwd(password): #TODO: Taa toimimaan
+        creddb = cred_setup()
+        salt = creddb.query(Cred).get(salt)
+        if password == binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32)):
+            return True
+        else:
+            return False
+
+    def login(username, password):
+        db = cred_setup()
+        cred = db.query(Cred).get(username)
+        if not cred:
+            return None
+        if check_pwd:                           
+            return newtoken(db, cred)
+        else:
+            return None
+
+    def register(username, password):
+    ...
+        newcred.password, newcred.salt = hash_pwd(password)
+    ...
+
+
+### Exercise 7
+
+Bank database setup:
+
+    class Bank(BankBase):
+        __tablename__ = "bank"
+        username = Column(String(128), primary_key=True)
+        zoobars = Column(Integer, nullable=False, default=10)
+        
+Bank service:
+
+    [bank_svc]
+            cmd = /zoobar/bank-server.py
+            args = /banksvc/sock
+            dir = /jail
+            uid = 61016
+            gid = 61012 # Group same as dynamic svc so this can access persondb and transferdb
+          
+bank-server:
+
+    #!/usr/bin/python
+    
+    import rpclib
+    import sys
+    import bank
+    from debug import *
+    from sqlalchemy.orm import class_mapper
+    def serialize(model): # Serialization needed for the get_log data
+      """Transforms a model into a dictionary which can be dumped to JSON."""
+      # first we get the names of all the columns on your model
+      columns = [c.key for c in class_mapper(model.__class__).columns]
+      # then we return their values in a dict
+      return dict((c, getattr(model, c)) for c in columns)
+    
+    class BankRpcServer(rpclib.RpcServer):
+        ## Fill in RPC methods here.
+        def rpc_transfer(self, sender, recipient, zoobars):
+            return bank.transfer(sender, recipient, zoobars)
+        def rpc_balance(self, username):
+            return bank.balance(username)
+        def rpc_newaccount(self, username):
+            return bank.newaccount(username)
+        def rpc_get_log(self, username):
+            serialized_labels = [
+               serialize(label)
+               for label in bank.get_log(username)
+            ]
+            return serialized_labels
+    (_, dummy_zookld_fd, sockpath) = sys.argv
+    
+    s = BankRpcServer()
+    s.run_sockpath_fork(sockpath)
+
+chroot-setup.sh for bankdb:
+
+    create_socket_dir /jail/banksvc 61016:61016 755
+    python /jail/zoobar/zoodb.py init-bank
+    chown 61016:61016 /jail/zoobar/db/bank/
+    chmod 300 /jail/zoobar/db/bank/
+    chown 61016:61016 /jail/zoobar/db/bank/bank.db
+    chmod 600 /jail/zoobar/db/bank/bank.db
+
+Needed to modify login.py so that the new bank account balance will be set with RPC call:
+
+    def addRegistration(self, username, password):
+        token = auth_client.register(username, password)
+        if token is not None:
+            bank_client.newaccount(username)
+            return self.loginCookie(username, token)
+        else:
+            return None
+
+
+### Exercise 8
+
+Modified bank_client.py to get token and validate it:
+
+    def validate(sender, token):
+        arguments = {'username': sender, 'token': token}
+        conn2 = rpclib.client_connect("/authsvc/sock")
+        return conn2.call('check_token', **arguments)
+        
+    def transfer(sender, recipient, zoobars, token):
+        if validate(sender, token):
+            arguments = {'sender': sender, 'recipient': recipient, 'zoobars': zoobars}
+            return conn.call('transfer', **arguments)
+        else:
+            return
+
+transfer.py:
+
+    def transfer():
+        warning = None
+        try:
+            if 'recipient' in request.form:
+                zoobars = eval(request.form['zoobars'])
+                bank_client.transfer(g.user.person.username,
+                              request.form['recipient'], zoobars, g.user.token)
+                warning = "Sent %d zoobars" % zoobars
+        except (KeyError, ValueError, AttributeError) as e:
+            traceback.print_exc()
+            warning = "Transfer to %s failed" % request.form['recipient']
+    
+        return render_template('transfer.html', warning=warning)
+        
+### Exercise 9
+
+### Exercise 10
+
+### Exercise 11
