@@ -147,12 +147,14 @@ Added hash_pwd(password) and check_pwd(password) functions to auth.py
 Also modified to login function to use the new check_pwd and register to use
 new hash_pwd:
 
+    # Hashes the given password
     def hash_pwd(password):
         salt = binascii.hexlify(urandom(8))
         saltedpass = binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32))
-        return saltedpass, salt
+        return saltedpass, salt    
     
-    def check_pwd(password): #TODO: Taa toimimaan
+    # Checks if the given password matches the stored hash
+    def check_pwd(password):
         creddb = cred_setup()
         salt = creddb.query(Cred).get(salt)
         if password == binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32)):

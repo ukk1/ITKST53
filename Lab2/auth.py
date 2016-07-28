@@ -6,12 +6,14 @@ import random
 import pbkdf2
 import binascii
 
+# Hashes the given password
 def hash_pwd(password):
     salt = binascii.hexlify(urandom(8))
     saltedpass = binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32))
     return saltedpass, salt    
 
-def check_pwd(password): #TODO: Taa toimimaan
+# Checks if the given password matches the stored hash
+def check_pwd(password):
     creddb = cred_setup()
     salt = creddb.query(Cred).get(salt)
     if password == binascii.hexlify(pbkdf2.PBKDF2(password, salt).hexread(32)):
@@ -38,7 +40,7 @@ def login(username, password):
 def register(username, password):
     persondb = person_setup()
     creddb = cred_setup()
-    person = persondb.query(Person).get(username) # need to be changed to person
+    person = persondb.query(Person).get(username)
 
     if person:
         return None
