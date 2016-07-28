@@ -45,8 +45,8 @@ In this exercise we can retrieve the information from the zoobarjs file to see i
     <script src="http://localhost:8080/zoobar/index.cgi/zoobarjs"></script>
     <script> 
     //if user is logged in transfer users zoobar to the attackers account
-        var zoobars = myZoobars || true;
-        if (zoobars) {
+        var zoobars = myZoobars;
+        if (zoobars || true); {
         location.href = "answer-2.html"; //launch the CSRF attack if user is logged in
         }
     </script>
