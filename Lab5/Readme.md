@@ -68,3 +68,5 @@ For intercepting the users credentials following modifications were done to the 
 When the user enters his or her credentials, they will be sent to the attacker and user will be logged in normally.
 
 ###Exercise 4: Profile Worm
+
+We completed this exercise with the XMLHttpRequest approach. Full working version can be found by following this link [answer-4.txt] (https://github.com/ukk1/ITKST53/blob/master/Lab5/answer-4.txt)
