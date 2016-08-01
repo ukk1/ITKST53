@@ -8,3 +8,4 @@ or z3.LShR() function:
     
 We found the formula from http://www.informit.com/articles/article.aspx?p=1959565&seqNum=5
 
+### Exercise 2
