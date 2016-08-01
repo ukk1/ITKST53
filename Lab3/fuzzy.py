@@ -696,6 +696,9 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     ## for each branch, invoke Z3 to find an input that would go
     ## the other way, and add it to the list of inputs to explore.
 
+
+    for item in cur_path_constr:
+
     ## Exercise 3: your code here.
     ##
     ## Here's a possible plan of attack:
