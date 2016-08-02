@@ -25,3 +25,9 @@ We found the formula from http://www.informit.com/articles/article.aspx?p=195956
     def __div__(self, o):
       res = self.__v / o
       return concolic_int(sym_slash(ast(self), ast(o)), res)
+      
+### Exercise 4
+
+    def __len__(self):
+      res = len(self.__v)
+      return concolic_int(sym_length(ast(self)), res)
