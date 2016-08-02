@@ -2,7 +2,16 @@
 
 ### Exercise 1
 
-I first started to look for any vulnerable functions within the program that are known to be vulnerable to buffer overflows. OWASP states the following: "C library functions such as strcpy (), strcat (), sprintf () and vsprintf () operate on null terminated strings and perform no bounds checking." So these particular functions were the ones I was interested in if they were being used by the program.
+We first started to look for any vulnerable functions within the program that are known to be vulnerable to buffer overflows. OWASP states the following: "C library functions such as strcpy (), strcat (), sprintf () and vsprintf () operate on null terminated strings and perform no bounds checking." So these particular functions were the ones I was interested in if they were being used by the program.
+
+[http.c:105]
+The program is susceptible to buffer overflow attack in http_request_line function. The 'url_decode' does not do any bounds checking. The 'reqpath' is handled as an argument and the value is appended as an decoded URI. The 'reqpath' is allocated by the 'process_client' function in zookd.c with 2048 bytes. If the attacker writes more than 2048 bytes it is possible to overflow the stack and execute malicious content.
+
+    url_decode(reqpath, sp1);
+    
+    envp += sprintf(envp, "REQUEST_URI=%s", reqpath) + 1;
+
+------
 
 [http.c:165] 
 The program allocates 8192 bytes for the variable 'buf' and 512 bytes for the variable 'envvar'. The envvar variable can be overwritten by the sprintf function, because it does not perform any bounds checking for the buffer size.
@@ -54,6 +63,27 @@ In the 'dir_join' function the program uses another vulnerable function - strcpy
 In the 'dir_join' function the program also uses 'strcat', which does not check buffer lengths and just concatenates user input as is.
 
     strcat(dst, filename); // Here the program uses strcat function to copy the 'dst' variable input into 'filename' variable
+
+
+The vulnerabilities require the attacker to overwrite the return pointer, which means that it is possible to protect against the attacks by using stack canaries. 
+
+#### Stack canaries
+
+Linux systems has a protection mechanism against buffer overflow attacks, known as canaries. The idea behind a stack canary is to place a 4-byte value onto the stack after the buffer and before the return pointer. The point in the canary is that if we as an attacker overflow the buffer and the canary value is not the same upon function completion as when it was pushed onto the stack, a function is called to terminate the process.
+
+There are three main types of canaries:
+######Terminator canary
+    0x00000aff & 0x000aff0d
+######Random canary
+    random 4-byte value protected in memory
+######Null canary
+    0x00000000
+
+The idea behind a terminator canary is to cause string operations to terminate when trying to overwrite the buffer and return pointer. It is possible for an attacker to place same value in the attack payload that will overwrite the terminator canary value and pass as valid.
+
+Random canary is more preferred method over terminator canary. It is a randomly generated 4-byte value placed onto the stack. It is important to use enough entropy when generating random 4-byte values as otherwise it can be possible for an attacker to brute force the canary value.
+
+Null canary is the weakest option of the three. The canary is a 4-byte value containing all 0s, this is very trivial for an attacker to bypass.
 
 ------
 
@@ -308,24 +338,6 @@ If we look at the status of dmesg, we can see the following:
     gs             0x33	51
     
 The full exploit code can be found from the [exploit-2a.py](https://github.com/ukk1/ITKST53/blob/master/Lab1/exploit-2a.py) file. It will overwrite the return address and inject the modified shellcode that will unlink the grades.txt file.
-
-#### Stack canaries
-
-Linux systems has a protection mechanism against buffer overflow attacks, known as canaries. The idea behind a stack canary is to place a 4-byte value onto the stack after the buffer and before the return pointer. The point in the canary is that if we as an attacker overflow the buffer and the canary value is not the same upon function completion as when it was pushed onto the stack, a function is called to terminate the process.
-
-There are three main types of canaries:
-######Terminator canary
-    0x00000aff & 0x000aff0d
-######Random canary
-    random 4-byte value protected in memory
-######Null canary
-    0x00000000
-
-The idea behind a terminator canary is to cause string operations to terminate when trying to overwrite the buffer and return pointer. It is possible for an attacker to place same value in the attack payload that will overwrite the terminator canary value and pass as valid.
-
-Random canary is more preferred method over terminator canary. It is a randomly generated 4-byte value placed onto the stack. It is important to use enough entropy when generating random 4-byte values as otherwise it can be possible for an attacker to brute force the canary value.
-
-Null canary is the weakest option of the three. The canary is a 4-byte value containing all 0s, this is very trivial for an attacker to bypass.
 
 ------
 ###Exercise 3
