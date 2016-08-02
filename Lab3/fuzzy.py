@@ -90,7 +90,7 @@ class const_str(sym_ast):
     ## for printing, we make strings look like nice constants,
     ## but otherwise we use z3str's encoding plan.
     if printable:
-      return z3.Const('"%s"' % self.v, z3str.StringSort())
+      return z3.Const('"%s"' % self.v, z3str.StringSort())e
 
     enc = "__cOnStStR_" + "".join(["_x%02x" % ord(c) for c in self.v])
     return z3.Const(enc, z3str.StringSort())
@@ -537,6 +537,14 @@ class concolic_str(str):
   ## Exercise 4: your code here.
   ## Implement symbolic versions of string length (override __len__)
   ## and contains (override __contains__).
+  
+  def __len__(self):
+    res = len(self.__v)
+    return concolic_int(sym_length(ast(self)), res)
+
+  def __contains__(self, o):
+    res = o in self.__v
+    return concolic_bool(sym_contains(ast(self), ast(o)), res)
 
   def startswith(self, o):
     res = self.__v.startswith(o)
