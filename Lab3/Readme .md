@@ -31,3 +31,7 @@ We found the formula from http://www.informit.com/articles/article.aspx?p=195956
     def __len__(self):
       res = len(self.__v)
       return concolic_int(sym_length(ast(self)), res)
+      
+    def __contains__(self, o):
+      res = o in self.__v
+      return concolic_bool(sym_contains(ast(self), ast(o)), res)
