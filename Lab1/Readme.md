@@ -465,3 +465,15 @@ The web server should have some sort of Access Control List (ACL) in place that 
     sshd:x:103:65534::/var/run/sshd:/usr/sbin/nologin
     colord:x:104:110:colord colour management daemon,,,:/var/lib/colord:/bin/false
     httpd:x:1000:1000:Ubuntu,,,:/home/httpd:/bin/bash
+
+###Exercise 6
+
+To protect applications against possible buffer overflow attacks it is recommended to replace any unsafe functions with their safe equivalents:
+
+    gets() -> fgets() - read characters
+    strcpy() -> strncpy() - copy content of the buffer
+    strcat() -> strncat() - buffer concatenation
+    sprintf() -> snprintf() - fill buffer with data of different types
+    (f)scanf() - read from STDIN
+    getwd() - return working directory
+    realpath() - return absolute (full) path
