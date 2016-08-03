@@ -8,6 +8,14 @@ or z3.LShR() function:
     
 We found the formula from http://www.informit.com/articles/article.aspx?p=1959565&seqNum=5
 
+####Challenge
+Computing the average of two 32-bit signed integer values:
+
+    t = (a & b) + ((a ^ b) >> 1)
+    s_avg = t + (z3.LShR(t,31) & (a ^ b))
+
+The formula was found from the Hacker's Delight: http://www.hackersdelight.org/basics2.pdf in Chapter 2-5 Average of Two Integers
+
 ### Exercise 2
 
     class sym_asterisk(sym_binop):
