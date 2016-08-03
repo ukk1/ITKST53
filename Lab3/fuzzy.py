@@ -90,7 +90,7 @@ class const_str(sym_ast):
     ## for printing, we make strings look like nice constants,
     ## but otherwise we use z3str's encoding plan.
     if printable:
-      return z3.Const('"%s"' % self.v, z3str.StringSort())e
+      return z3.Const('"%s"' % self.v, z3str.StringSort())
 
     enc = "__cOnStStR_" + "".join(["_x%02x" % ord(c) for c in self.v])
     return z3.Const(enc, z3str.StringSort())
