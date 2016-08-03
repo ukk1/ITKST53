@@ -57,6 +57,8 @@ def run_profile(pcode, profile_api_client):
     globals = {'api': profile_api_client}
     exec pcode in globals
 
+# TODO: Ex10: user privilege separation
+
 class ProfileServer(rpclib.RpcServer):
     def rpc_run(self, pcode, user, visitor):
         uid = 61017
@@ -74,6 +76,7 @@ class ProfileServer(rpclib.RpcServer):
                 sys.exit(0)
         sb.close()
         os.waitpid(pid, 0)
+
 
         sandbox = sandboxlib.Sandbox(userdir, uid, '/profilesvc/lockfile')
         with rpclib.RpcClient(sa) as profile_api_client:
