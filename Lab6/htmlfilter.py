@@ -14,9 +14,12 @@ libcode = '''
             return {
                 get onclick() { return e.onclick; },
                 set onclick(h) { e.onclick = h; },
+                get textContent() { return e.textContent; },
+                set textContent(h) { e.textContent = h },
             }
         },
     };
+
 
     // Do not change these functions.
     function sandbox_grader(url) {
@@ -29,6 +32,12 @@ libcode = '''
         try {
             eval(its_okay_no_one_will_ever_define_this_variable);
         } catch (e) {
+        }
+    }
+    function sandbox_setTimeout(s, sec) {
+        if (typeof s == "function") {
+            t = eval(s);
+            setTimeout(t, sec);
         }
     }
 </script>

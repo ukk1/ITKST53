@@ -29,6 +29,7 @@ from slimit import ast
 
 class LabVisitor(object):
 
+
     def __init__(self):
         self.indent_level = 0
 
@@ -330,7 +331,7 @@ class LabVisitor(object):
         return s
 
     def visit_FunctionCall(self, node):
-        s = '%s(%s)' % (self.visit(node.identifier),
+        s = 'sandbox_%s(%s)' % (self.visit(node.identifier),
                         ', '.join(self.visit(arg) for arg in node.args))
         return s
 
