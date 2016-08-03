@@ -26,6 +26,8 @@ We found the formula from http://www.informit.com/articles/article.aspx?p=195956
       res = self.__v / o
       return concolic_int(sym_slash(ast(self), ast(o)), res)
       
+### Exercise 3
+      
 ### Exercise 4
 
     def __len__(self):
@@ -35,3 +37,9 @@ We found the formula from http://www.informit.com/articles/article.aspx?p=195956
     def __contains__(self, o):
       res = o in self.__v
       return concolic_bool(sym_contains(ast(self), ast(o)), res)
+
+### Exercise 5
+
+### Exercise 6
+
+### Exercise 7
