@@ -23,6 +23,10 @@ b = z3.BitVec('b', 32)
 u_avg = (a & b) + z3.LShR(a ^ b,1) # Used the formula from Hacker's Delight
 s_avg = (a + b) / 2
 
+##Challenge
+t = (a & b) + ((a ^ b) >> 1)
+s_avg = t + (z3.LShR(t,31) & (a ^ b))
+
 ## Do not change the code below.
 
 ## To compute the reference answers, we extend both a and b by one
