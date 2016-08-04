@@ -40,6 +40,15 @@ libcode = '''
             setTimeout(t, sec);
         }
     }
+    function bracket_check(s) {
+        if (s.toString == "__proto__" || s.toString == "constructor" || s.toString == "__defineGetter__" || s.toString == "__defineSetter__") {
+            return __invalid__;
+        }
+        else {
+            return s.toString();
+            }
+
+    }
 </script>
 '''
 
