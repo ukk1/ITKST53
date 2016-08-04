@@ -15,7 +15,7 @@ libcode = '''
                 get onclick() { return e.onclick; },
                 set onclick(h) { e.onclick = h; },
                 get textContent() { return e.textContent; },
-                set textContent(h) { e.textContent = h },
+                set textContent(h) { e.textContent = h; },
             }
         },
     };
@@ -41,14 +41,20 @@ libcode = '''
         }
     }
     function bracket_check(s) {
-        if (s.toString == "__proto__" || s.toString == "constructor" || s.toString == "__defineGetter__" || s.toString == "__defineSetter__") {
+        if (s.toString() == "__proto__" || s.toString() == "constructor" || s.toString() == "__defineGetter__" || s.toString() == "__defineSetter__") {
             return __invalid__;
         }
         else {
             return s.toString();
             }
-
     }
+    function sandbox_eval(s) {
+        if (typeof s == "function") {
+            eval(s);
+        }
+    }
+
+
 </script>
 '''
 
