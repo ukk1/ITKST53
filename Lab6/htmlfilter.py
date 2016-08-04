@@ -35,8 +35,12 @@ libcode = '''
         }
     }
     function sandbox_setTimeout(s, sec) {
-            setTimeout(s, sec);
+        if (typeof s == "function") {
+            t = eval(s);
+            setTimeout(t, sec);
+            }
     }
+
     function bracket_check(s) {
         if (s.toString() == "__proto__" || s.toString() == "constructor" || s.toString() == "__defineGetter__" || s.toString() == "__defineSetter__") {
             return __invalid__;
