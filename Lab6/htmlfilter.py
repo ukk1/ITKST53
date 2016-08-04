@@ -35,10 +35,7 @@ libcode = '''
         }
     }
     function sandbox_setTimeout(s, sec) {
-        if (typeof s == "function") {
-            t = eval(s);
-            setTimeout(t, sec);
-        }
+            setTimeout(s, sec);
     }
     function bracket_check(s) {
         if (s.toString() == "__proto__" || s.toString() == "constructor" || s.toString() == "__defineGetter__" || s.toString() == "__defineSetter__") {
@@ -48,11 +45,7 @@ libcode = '''
             return s.toString();
             }
     }
-    function sandbox_eval(s) {
-        if (typeof s == "function") {
-            eval(s);
-        }
-    }
+
 
 
 </script>
