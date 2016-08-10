@@ -706,7 +706,6 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
 
     partial_path = []
     for (branch_condition, caller) in zip(cur_path_constr, cur_path_constr_callers):
-        #e = z3expr(c, False)
 
         new_branch =  partial_path + [sym_not(branch_condition)]
         partial_path = partial_path + [branch_condition]
@@ -725,29 +724,6 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
                     new_values[k] = model[k]
 
                 inputs.add(new_values, caller)
-
-
-        '''
-        new_branch = fork_and_check(branch)
-        print new_branch
-
-
-        (ok, model) = new_branch
-        if ok == z3.sat:
-            new_values = {}
-            for k in model:
-                if k in concrete_values:
-                    new_values[k] = model[k]
-                inputs.add(new_values, caller)
-        #if new_branch in checked:
-        #    continue
-        #else:
-        #inputs.add(new_branch, caller)
-        #e = z3expr(c, False)
-
-        #(ok, model) = fork_and_check(new_branch)
-        '''
-
 
 
 
