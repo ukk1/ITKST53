@@ -704,8 +704,52 @@ def concolic_test(testfunc, maxiter = 100, verbose = 0):
     ## for each branch, invoke Z3 to find an input that would go
     ## the other way, and add it to the list of inputs to explore.
 
+    partial_path = []
+    for (branch_condition, caller) in zip(cur_path_constr, cur_path_constr_callers):
+        #e = z3expr(c, False)
 
-    for item in cur_path_constr:
+        new_branch =  partial_path + [sym_not(branch_condition)]
+        partial_path = partial_path + [branch_condition]
+        new_path_condition = sym_and(*new_branch)
+
+        if new_path_condition in checked:
+            continue
+
+        (ok, model) = fork_and_check(new_path_condition)
+        checked.add(new_path_condition)
+
+        if ok == z3.sat:
+            new_values = {}
+            for k in model:
+                if k in concrete_values:
+                    new_values[k] = model[k]
+
+                inputs.add(new_values, caller)
+
+
+        '''
+        new_branch = fork_and_check(branch)
+        print new_branch
+
+
+        (ok, model) = new_branch
+        if ok == z3.sat:
+            new_values = {}
+            for k in model:
+                if k in concrete_values:
+                    new_values[k] = model[k]
+                inputs.add(new_values, caller)
+        #if new_branch in checked:
+        #    continue
+        #else:
+        #inputs.add(new_branch, caller)
+        #e = z3expr(c, False)
+
+        #(ok, model) = fork_and_check(new_branch)
+        '''
+
+
+
 
     ## Exercise 3: your code here.
     ##
