@@ -35,27 +35,29 @@ The formula was found from the Hacker's Delight: http://www.hackersdelight.org/b
       return concolic_int(sym_slash(ast(self), ast(o)), res)
       
 ### Exercise 3
-
-    partial_path = []
-    for (branch_condition, caller) in zip(cur_path_constr, cur_path_constr_callers):
-
-        new_branch =  partial_path + [sym_not(branch_condition)]
-        partial_path = partial_path + [branch_condition]
-        new_path_condition = sym_and(*new_branch)
-
-        if new_path_condition in checked:
-            continue
-
-        (ok, model) = fork_and_check(new_path_condition)
-        checked.add(new_path_condition)
-
-        if ok == z3.sat:
-            new_values = {}
-            for k in model:
-                if k in concrete_values:
-                    new_values[k] = model[k]
-
-                inputs.add(new_values, caller)
+    def concolic_test(testfunc, maxiter = 100, verbose = 0):
+    .........
+        partial_path = []
+        for (branch_condition, caller) in zip(cur_path_constr, cur_path_constr_callers):
+    
+            new_branch =  partial_path + [sym_not(branch_condition)]
+            partial_path = partial_path + [branch_condition]
+            new_path_condition = sym_and(*new_branch)
+    
+            if new_path_condition in checked:
+                continue
+    
+            (ok, model) = fork_and_check(new_path_condition)
+            checked.add(new_path_condition)
+    
+            if ok == z3.sat:
+                new_values = {}
+                for k in model:
+                    if k in concrete_values:
+                        new_values[k] = model[k]
+    
+                    inputs.add(new_values, caller)
+     ........
     
   Got some help for this from: https://github.com/jonhoo/django-coex/blob/master/symex/fuzzy.py
       
