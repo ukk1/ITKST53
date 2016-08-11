@@ -73,6 +73,20 @@ The formula was found from the Hacker's Delight: http://www.hackersdelight.org/b
 
 ### Exercise 5
 
+    for r in query.all(): ##returns a list
+    key = r.__table__.primary_key.columns.keys()[0]
+    value = getattr(r,key)
+    if value == primary_key:
+        return r
+
 ### Exercise 6
+
+Detecting zoobar balance mismatch
+
+    balance = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
+    if balance != balance1:
+        report_balance_mismatch()
+
+Detecting zoobar theft
 
 ### Exercise 7
