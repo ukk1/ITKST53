@@ -77,12 +77,11 @@ def test_stuff():
 
   ## Exercise 6: your code here.
   
+  ## Detect balance mismatch.
+  ## When detected, call report_balance_mismatch()
   balance = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
   if balance != balance1:
      report_balance_mismatch()
-
-  ## Detect balance mismatch.
-  ## When detected, call report_balance_mismatch()
 
   ## Detect zoobar theft.
   ## When detected, call report_zoobar_theft()
