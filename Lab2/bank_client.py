@@ -6,7 +6,7 @@ socket = "/banksvc/sock"
 conn = rpclib.client_connect(socket)
 
 def transfer(sender, recipient, zoobars, token):
-    if validate(sender, token): # TODO: Check if this is actually working
+    if validate(sender, token):
         arguments = {'sender': sender, 'recipient': recipient, 'zoobars': zoobars}
         return conn.call('transfer', **arguments)
     else:
