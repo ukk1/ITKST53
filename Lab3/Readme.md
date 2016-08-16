@@ -85,11 +85,11 @@ Detecting zoobar balance mismatch
 
     balance = sum([p.zoobars for p in pdb.query(zoobar.zoodb.Person).all()])
     if balance != balance1:
-        report_balance_mismatch()
+       report_balance_mismatch()
 
 Detecting zoobar theft
 
-  if balance != balance1 - sum([p.amount for p in tdb.query(zoobar.zoodb.Transfer).all()]):
-    report_zoobar_theft()
+    if balance != balance1 - sum([p.amount for p in tdb.query(zoobar.zoodb.Transfer).all()]):
+       report_zoobar_theft()
 
 ### Exercise 7
