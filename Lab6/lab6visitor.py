@@ -29,7 +29,6 @@ from slimit import ast
 
 class LabVisitor(object):
 
-
     def __init__(self):
         self.indent_level = 0
 
@@ -56,7 +55,7 @@ class LabVisitor(object):
         return s
 
     def visit_VarStatement(self, node):
-        s = 'var %s;' % ', '.join(self.visit(child) for child in node)
+        s = 'var sandbox_%s;' % ', '.join(self.visit(child) for child in node)
         return s
 
     def visit_VarDecl(self, node):
@@ -76,11 +75,19 @@ class LabVisitor(object):
         if node.op == ':':
             template = '%s%s %s'
         else:
-            template = '%s %s %s'
+            template = 'sandbox_%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-        return template % (
+	s = template % (
             self.visit(node.left), node.op, self.visit(node.right))
+	if 'sandbox_sandbox_sandbox_' in s:
+		s = s.replace('sandbox_sandbox_sandbox_', 'sandbox_')
+	if 'sandbox_sandbox_' in s:
+		s = s.replace('sandbox_sandbox_', 'sandbox_')
+	#s = 'sandbox_' + s
+       # return template % (
+        #    self.visit(node.left), node.op, self.visit(node.right))
+	return s
 
     def visit_Number(self, node):
         return node.value
@@ -264,7 +271,7 @@ class LabVisitor(object):
                              for element in node.elements)
         self.indent_level -= 2
 
-        s = 'function %s(%s) {\n%s' % (
+        s = 'function sandbox_%s(%s) {\n%s' % (
             self.visit(node.identifier),
             ', '.join(self.visit(param) for param in node.parameters),
             elements,
@@ -319,15 +326,24 @@ class LabVisitor(object):
         return s
 
     def visit_DotAccessor(self, node):
+	print type(node)
         if getattr(node, '_parens', False):
-            template = '(%s.%s)'
+           # if node == 'sandbox_document':
+             #   template = '(%s.%s)'
+	    #else:
+                template = '(sandbox_%s.%s)'
         else:
-            template = '%s.%s'
+           # if node == 'sandbox_document':
+	    #	template = '%s.%s'
+	   # else:
+                template = 'sandbox_%s.%s'
         s = template % (self.visit(node.node), self.visit(node.identifier))
-        return s
+        if 'sandbox_sandbox_' in s:
+		s = s.replace('sandbox_sandbox_', 'sandbox_')
+	return s
 
     def visit_BracketAccessor(self, node):
-        s = '%s[%s]' % (self.visit(node.node), self.visit(node.expr))
+        s = 'sandbox_%s[%s]' % (self.visit(node.node), self.visit(node.expr))
         return s
 
     def visit_FunctionCall(self, node):

@@ -16,6 +16,8 @@ libcode = '''
                 set onclick(h) { e.onclick = h; },
                 get textContent() { return e.textContent; },
                 set textContent(h) { e.textContent = h; },
+                get scroll() {return e.scroll}
+                set scroll() {return}
             }
         },
     };
@@ -50,6 +52,9 @@ libcode = '''
             }
     }
 
+    function sandbox_scroll(id) {
+        scroll(id);
+    }
 
 
 </script>
