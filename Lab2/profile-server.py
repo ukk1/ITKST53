@@ -60,10 +60,26 @@ def run_profile(pcode, profile_api_client):
 # TODO: Ex10: user privilege separation
 
 class ProfileServer(rpclib.RpcServer):
-    def rpc_run(self, pcode, user, visitor):
-        uid = 61017
 
-        userdir = '/tmp'
+    def rpc_run(self, pcode, user, visitor):
+        def convertalpha(username):
+            # quick fix: convert possibly problematic characters to zeroes
+            for letter in username:
+                if not letter.isalnum():
+                    username[letter] = 0
+
+            return username
+
+        uid = 61017
+        if not user.isalnum():
+            user = convertalpha(user)
+
+        userdir = os.path.join('/tmp', user)
+        if os.path.exists(userdir):
+            print "dir exists"
+        else:
+            os.mkdir(userdir)
+            os.chmod(userdir, 0330)
 
         (sa, sb) = socket.socketpair(socket.AF_UNIX, socket.SOCK_STREAM, 0)
         pid = os.fork()
