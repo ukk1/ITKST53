@@ -85,8 +85,8 @@ def test_stuff():
 
   ## Detect zoobar theft.
   ## When detected, call report_zoobar_theft()
-if balance != balance1 - sum([p.amount for p in tdb.query(zoobar.zoodb.Transfer).all()]):
-   report_zoobar_theft()
+  if balance != balance1 - sum([p.amount for p in tdb.query(zoobar.zoodb.Transfer).all()]):
+     report_zoobar_theft()
 
 fuzzy.concolic_test(test_stuff, maxiter=2000, verbose=1)
 
