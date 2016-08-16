@@ -89,4 +89,7 @@ Detecting zoobar balance mismatch
 
 Detecting zoobar theft
 
+  if balance != balance1 - sum([p.amount for p in tdb.query(zoobar.zoodb.Transfer).all()]):
+    report_zoobar_theft()
+
 ### Exercise 7
