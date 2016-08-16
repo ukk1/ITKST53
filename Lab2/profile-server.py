@@ -57,7 +57,7 @@ def run_profile(pcode, profile_api_client):
     globals = {'api': profile_api_client}
     exec pcode in globals
 
-# TODO: Ex10: user privilege separation
+
 
 class ProfileServer(rpclib.RpcServer):
 
