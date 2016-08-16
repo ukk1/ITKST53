@@ -62,7 +62,10 @@ class LabVisitor(object):
         output = []
         output.append(self.visit(node.identifier))
         if node.initializer is not None:
-            output.append(' = %s' % self.visit(node.initializer))
+#		if type(node.initializer) is ast.Identifier:
+			output.append(' = %s' % self.visit(node.initializer))            
+#		else:
+#			output.append(' = %s' % self.visit(node.initializer))
         return ''.join(output)
 
     def visit_Identifier(self, node):
@@ -75,20 +78,15 @@ class LabVisitor(object):
         if node.op == ':':
             template = '%s%s %s'
         else:
-            template = 'sandbox_%s %s %s'
+            template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-	s = template % (
-            self.visit(node.left), node.op, self.visit(node.right))
-	if 'sandbox_sandbox_sandbox_' in s:
-		s = s.replace('sandbox_sandbox_sandbox_', 'sandbox_')
-	if 'sandbox_sandbox_' in s:
-		s = s.replace('sandbox_sandbox_', 'sandbox_')
-	#s = 'sandbox_' + s
-       # return template % (
-        #    self.visit(node.left), node.op, self.visit(node.right))
-	return s
-
+	if type(node.right) is ast.Identifier:
+        	return template % (
+            		self.visit(node.left), node.op, 'sandbox_' + self.visit(node.right))
+#	elif type(node.right)
+	return template % (
+                self.visit(node.left), node.op, self.visit(node.right))
     def visit_Number(self, node):
         return node.value
 
@@ -160,7 +158,7 @@ class LabVisitor(object):
         return s
 
     def visit_ExprStatement(self, node):
-        return '%s;' % self.visit(node.expr)
+        return 'sandbox_%s;' % self.visit(node.expr)
 
     def visit_DoWhile(self, node):
         s = 'do '
@@ -326,28 +324,19 @@ class LabVisitor(object):
         return s
 
     def visit_DotAccessor(self, node):
-	print type(node)
         if getattr(node, '_parens', False):
-           # if node == 'sandbox_document':
-             #   template = '(%s.%s)'
-	    #else:
-                template = '(sandbox_%s.%s)'
+            template = '(%s.%s)'
         else:
-           # if node == 'sandbox_document':
-	    #	template = '%s.%s'
-	   # else:
-                template = 'sandbox_%s.%s'
+            template = '%s.%s'
         s = template % (self.visit(node.node), self.visit(node.identifier))
-        if 'sandbox_sandbox_' in s:
-		s = s.replace('sandbox_sandbox_', 'sandbox_')
-	return s
+        return s
 
     def visit_BracketAccessor(self, node):
         s = 'sandbox_%s[%s]' % (self.visit(node.node), self.visit(node.expr))
         return s
 
     def visit_FunctionCall(self, node):
-        s = 'sandbox_%s(%s)' % (self.visit(node.identifier),
+        s = '%s(%s)' % (self.visit(node.identifier),
                         ', '.join(self.visit(arg) for arg in node.args))
         return s
 
