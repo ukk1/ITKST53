@@ -36,9 +36,9 @@ libcode = '''
     }
     function sandbox_setTimeout(s, sec) {
         if (typeof s == "function") {
-            t = eval(s);
-            setTimeout(t, sec);
-            }
+		t = eval(s);
+		setTimeout(t, sec);
+	}   
     }
 
     function bracket_check(s) {
@@ -50,7 +50,14 @@ libcode = '''
             }
     }
 
-
+    function this_check(s) {
+        if (s.prototype.indexOf('window') !== -1){
+            return null;
+	}
+        else {
+            return s;
+	}
+    }   
 
 
 </script>
