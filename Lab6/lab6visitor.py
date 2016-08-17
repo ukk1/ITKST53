@@ -55,21 +55,18 @@ class LabVisitor(object):
         return s
 
     def visit_VarStatement(self, node):
-        s = 'var sandbox_%s;' % ', '.join(self.visit(child) for child in node)
+        s = 'var %s;' % ', '.join(self.visit(child) for child in node)
         return s
 
     def visit_VarDecl(self, node):
         output = []
         output.append(self.visit(node.identifier))
         if node.initializer is not None:
-#		if type(node.initializer) is ast.Identifier:
-			output.append(' = %s' % self.visit(node.initializer))            
-#		else:
-#			output.append(' = %s' % self.visit(node.initializer))
+            output.append(' = %s' % self.visit(node.initializer))
         return ''.join(output)
 
     def visit_Identifier(self, node):
-        return node.value
+        return 'sandbox_' +node.value
 
     def visit_Assign(self, node):
         # Note: if node.op is ':' this "assignment" is actually a property in
@@ -81,12 +78,9 @@ class LabVisitor(object):
             template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-	if type(node.right) is ast.Identifier:
-        	return template % (
-            		self.visit(node.left), node.op, 'sandbox_' + self.visit(node.right))
-#	elif type(node.right)
-	return template % (
-                self.visit(node.left), node.op, self.visit(node.right))
+        return template % (
+            self.visit(node.left), node.op, self.visit(node.right))
+
     def visit_Number(self, node):
         return node.value
 
@@ -158,7 +152,7 @@ class LabVisitor(object):
         return s
 
     def visit_ExprStatement(self, node):
-        return 'sandbox_%s;' % self.visit(node.expr)
+        return '%s;' % self.visit(node.expr)
 
     def visit_DoWhile(self, node):
         s = 'do '
@@ -269,7 +263,7 @@ class LabVisitor(object):
                              for element in node.elements)
         self.indent_level -= 2
 
-        s = 'function sandbox_%s(%s) {\n%s' % (
+        s = 'function %s(%s) {\n%s' % (
             self.visit(node.identifier),
             ', '.join(self.visit(param) for param in node.parameters),
             elements,
@@ -328,11 +322,12 @@ class LabVisitor(object):
             template = '(%s.%s)'
         else:
             template = '%s.%s'
-        s = template % (self.visit(node.node), self.visit(node.identifier))
+        s = template % (self.visit(node.node), self.visit(node.identifier).
+		replace('sandbox_', ''))
         return s
 
     def visit_BracketAccessor(self, node):
-        s = 'sandbox_%s[%s]' % (self.visit(node.node), self.visit(node.expr))
+        s = '%s[%s]' % (self.visit(node.node), self.visit(node.expr))
         return s
 
     def visit_FunctionCall(self, node):
