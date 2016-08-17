@@ -66,7 +66,7 @@ class LabVisitor(object):
         return ''.join(output)
 
     def visit_Identifier(self, node):
-        return 'sandbox_' + node.value
+        return 'sandbox_' +node.value
 
     def visit_Assign(self, node):
         # Note: if node.op is ':' this "assignment" is actually a property in
@@ -78,9 +78,11 @@ class LabVisitor(object):
             template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-        return template % (
-            self.visit(node.left), node.op, self.visit(node.right))
-
+        if node.op == ':':
+		return template % (
+            		self.visit(node.left).replace('sandbox_', ''), node.op, self.visit(node.right))
+	return template % (
+                        self.visit(node.left), node.op, self.visit(node.right))
     def visit_Number(self, node):
         return node.value
 

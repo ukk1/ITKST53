@@ -19,6 +19,24 @@ Second, modify the dotaccessor so that attributes wont get prefixed:
         s = template % (self.visit(node.node), self.visit(node.identifier).
 		replace('sandbox_', ''))
         return s
+        
+We also needed on 'unsandbox' object properties:
+
+        def visit_Assign(self, node):
+        # Note: if node.op is ':' this "assignment" is actually a property in
+        # an object literal, i.e. { foo: 1, "bar": 2 }. In that case, node.left
+        # is either an ast.Identifier or an ast.String.
+        if node.op == ':':
+            template = '%s%s %s'
+        else:
+            template = '%s %s %s'
+        if getattr(node, '_parens', False):
+            template = '(%s)' % template
+        if node.op == ':':
+                return template % (
+                        self.visit(node.left).replace('sandbox_', ''), node.op, self.visit(node.right))
+        return template % (
+                        self.visit(node.left), node.op, self.visit(node.right))
 
 ### Prevent sandboxed code from accessing dangerous properties of objects
 
