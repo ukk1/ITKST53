@@ -40,6 +40,11 @@ We also needed on 'unsandbox' object properties:
 
 ### Prevent sandboxed code from accessing dangerous properties of objects
 
+
+    
+### Ensure that dangerous attributes cannot be accessed using array-like brackets
+htmlfilter.py:
+
     function bracket_check(s) {
     
         if (s.toString == "__proto__" || s.toString == "constructor" || s.toString == "__defineGetter__" || s.toString == "__defineSetter__") {
@@ -51,6 +56,10 @@ We also needed on 'unsandbox' object properties:
 
     }
     
-### Ensure that dangerous attributes cannot be accessed using array-like brackets
+lab6visitor.py:
+
+        def visit_BracketAccessor(self, node):
+        s = '%s[bracket_check(%s)]' % (self.visit(node.node), self.visit(node.expr))
+        return s    
 
 ### Work around JavaScript's handling of the 'this' keyword
