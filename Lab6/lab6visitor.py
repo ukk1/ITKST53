@@ -66,7 +66,7 @@ class LabVisitor(object):
         return ''.join(output)
 
     def visit_Identifier(self, node):
-        return 'sandbox_' +node.value
+        return 'sandbox_' + node.value
 
     def visit_Assign(self, node):
         # Note: if node.op is ':' this "assignment" is actually a property in
