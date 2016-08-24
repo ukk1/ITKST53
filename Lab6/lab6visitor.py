@@ -66,7 +66,7 @@ class LabVisitor(object):
         return ''.join(output)
 
     def visit_Identifier(self, node):
-        return 'sandbox_' +node.value
+        return 'sandbox_%s' % node.value
 
     def visit_Assign(self, node):
         # Note: if node.op is ':' this "assignment" is actually a property in
@@ -78,11 +78,12 @@ class LabVisitor(object):
             template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-        if node.op == ':':
+        if  node.op == ':':#node.left == 'ast.Identifier' or node.left == 'ast.String':
 		return template % (
-            		self.visit(node.left).replace('sandbox_', ''), node.op, self.visit(node.right))
+            		self.visit(node.left).replace('sandbox_', '',2), node.op, self.visit(node.right))
 	return template % (
                         self.visit(node.left), node.op, self.visit(node.right))
+
     def visit_Number(self, node):
         return node.value
 
@@ -366,5 +367,12 @@ class LabVisitor(object):
         return s
 
     def visit_This(self, node):
-#        return 'this_check(%s)' % self.visit(node.node)
+#        return 'this_check("this")'# % self.visit(node.node)
+#	if node.args:
+#		s = '%s.this_check(%s)' % (self.visit(node.identifier),
+#                        ', '.join(self.visit(arg) for arg in node.args))
+#		return s
+	
+#	s = self.visit(node.node)
+	#return 'this_check(%s)' % self.visit()
 	return 'this'

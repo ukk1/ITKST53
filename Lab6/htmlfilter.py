@@ -42,6 +42,7 @@ libcode = '''
     }
 
     function bracket_check(s) {
+//	s = eval(s);	
         if (s.toString() == "__proto__" || s.toString() == "constructor" || s.toString() == "__defineGetter__" || s.toString() == "__defineSetter__") {
             return __invalid__;
         }
@@ -50,14 +51,21 @@ libcode = '''
             }
     }
 
-    function this_check(s) {
-        if (s.prototype.indexOf('window') !== -1){
-            return null;
-	}
+    function prop_check(s) {
+        if (s === "__proto__" || s === "__defineGetter__" || s === "__defineSetter__") {
+            return __invalid__;
+        }
         else {
             return s;
+            }
+    }
+
+    function this_check(s) {
+	if (s.toString().indexOf("window") != -1) {
+		return null;	
 	}
-    }   
+        return s;
+    }
 
 
 </script>
