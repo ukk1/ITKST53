@@ -50,21 +50,26 @@ libcode = '''
       return false;
     }
 
+    var badwords = ["eval","__proto__", "constructor", "__defineGetter__", "__defineSetter__"];
+    badwords.includes = includes;
+
     function badword_check(s) {
-        var badwords = ["__proto__", "constructor", "__defineGetter__", "__defineSetter__"];
-        badwords.includes = includes;
+	if (typeof s == "function") {
+		ss = eval(s);
+	}
 
-	    if (typeof s == "function")
-		    ss = eval(s);
+	else {
+		ss = s.toString();
+	}
 
-        else
-            ss = s.toString();
+	if (badwords.includes(ss)) {
+		return __invalid__;		
+	}
 
-        if (badwords.includes(ss))
-            return __invalid__;
-
-        return ss;
+	return ss;
     }
+
+    
 
     function this_check(s) {
 	if (s.toString().indexOf("window") != -1) {
