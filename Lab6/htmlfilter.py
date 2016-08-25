@@ -41,23 +41,31 @@ libcode = '''
 	}   
     }
 
-    function bracket_check(s) {
-//	s = eval(s);	
-        if (s.toString() == "__proto__" || s.toString() == "constructor" || s.toString() == "__defineGetter__" || s.toString() == "__defineSetter__") {
-            return __invalid__;
+    function includes(k) {
+      for(var i=0; i < this.length; i++){
+        if( this[i] === k || ( this[i] !== this[i] && k !== k ) ){
+          return true;
         }
-        else {
-            return s.toString();
-            }
+      }
+      return false;
     }
 
-    function prop_check(s) {
-        if (s === "__proto__" || s === "__defineGetter__" || s === "__defineSetter__") {
+    var badwords = ["__proto__", "constructor", "__defineGetter__", "__defineSetter__"];
+    badwords.includes = includes;
+
+
+    function badword_check(s) {
+
+	    if (typeof s == "function") {
+		    ss = eval(s);
+	    }
+        else {
+            ss = s.toString();
+        }
+        if (badwords.includes(ss)) {
             return __invalid__;
         }
-        else {
-            return s;
-            }
+        return ss;
     }
 
     function this_check(s) {
