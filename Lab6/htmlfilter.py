@@ -71,19 +71,9 @@ libcode = '''
 	return s;
     }
 
-    function property_check(s) {
-	for (i = 0; i < s.length -1; i++) {
-		if (badwords.includes(s[i])) s[i] = '__invalid__';
-		}
-	return s;
-	}
-	
 
     function this_check(s) {
-	if (s == window) return null;
-	//if (s.toString().indexOf("window") != -1) {
-	//	return null;	
-	//}
+	if (s === window || s === document) return null;
         return s;
     }
 

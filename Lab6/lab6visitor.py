@@ -332,9 +332,7 @@ class LabVisitor(object):
 	    template = '%s[badword_check("%s")]'
         s = template % (self.visit(node.node), self.visit(node.identifier).
 		replace('sandbox_', ''))
-       #	f = open('tempfile', 'a')
-       # f.write(s + '\n')
-       # f.close()
+
 	return s
 
     def visit_BracketAccessor(self, node):
@@ -375,12 +373,4 @@ class LabVisitor(object):
         return s
 
     def visit_This(self, node):
-#        return 'this_check("this")'# % self.visit(node.node)
-#	if node.args:
-#		s = '%s.this_check(%s)' % (self.visit(node.identifier),
-#                        ', '.join(self.visit(arg) for arg in node.args))
-#		return s
-	
-#	s = self.visit(node.node)
-#	return 'this_check(%s)' % ast.This()
-	return 'this'
+	    return 'this_check(this)'
