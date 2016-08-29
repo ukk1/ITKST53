@@ -50,31 +50,40 @@ libcode = '''
       return false;
     }
 
-    var badwords = ["eval","__proto__", "constructor", "__defineGetter__", "__defineSetter__"];
+    var badwords = ["__proto__", "constructor", "__defineGetter__", "__defineSetter__"];
     badwords.includes = includes;
 
     function badword_check(s) {
-	if (typeof s == "function") {
-		ss = eval(s);
+/*	if (typeof s == "function") {
+		var ss = eval(s);
+		ss = ss.toString();
 	}
 
 	else {
-		ss = s.toString();
+		var ss = ss.toString();
+
+	}
+*/
+	if (badwords.includes(s)) {
+		return '__invalid__';		
 	}
 
-	if (badwords.includes(ss)) {
-		return __invalid__;		
-	}
-
-	return ss;
+	return s;
     }
 
-    
+    function property_check(s) {
+	for (i = 0; i < s.length -1; i++) {
+		if (badwords.includes(s[i])) s[i] = '__invalid__';
+		}
+	return s;
+	}
+	
 
     function this_check(s) {
-	if (s.toString().indexOf("window") != -1) {
-		return null;	
-	}
+	if (s == window) return null;
+	//if (s.toString().indexOf("window") != -1) {
+	//	return null;	
+	//}
         return s;
     }
 

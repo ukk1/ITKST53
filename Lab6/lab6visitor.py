@@ -34,6 +34,11 @@ class LabVisitor(object):
 
     def _make_indent(self):
         return ' ' * self.indent_level
+    
+    def write(stuff):		## For my own testing
+	f = open('tempfile', 'a')
+	f.write(stuff + '\n')
+	f.close()
 
     def visit(self, node):
         method = 'visit_%s' % node.__class__.__name__
@@ -80,7 +85,7 @@ class LabVisitor(object):
             template = '(%s)' % template
         if  node.op == ':':#node.left == 'ast.Identifier' or node.left == 'ast.String':
 		return template % (
-            		self.visit(node.left).replace('sandbox_', '',2), node.op, self.visit(node.right))
+            		self.visit(node.left).replace('sandbox_', ''), node.op, self.visit(node.right))
 	return template % (
                         self.visit(node.left), node.op, self.visit(node.right))
 
@@ -324,10 +329,13 @@ class LabVisitor(object):
         if getattr(node, '_parens', False):
             template = '(%s.%s)'
         else:
-            template = '%s.%s'
+	    template = '%s[badword_check("%s")]'
         s = template % (self.visit(node.node), self.visit(node.identifier).
 		replace('sandbox_', ''))
-        return s
+       #	f = open('tempfile', 'a')
+       # f.write(s + '\n')
+       # f.close()
+	return s
 
     def visit_BracketAccessor(self, node):
         s = '%s[badword_check(%s)]' % (self.visit(node.node), self.visit(node.expr))
@@ -374,5 +382,5 @@ class LabVisitor(object):
 #		return s
 	
 #	s = self.visit(node.node)
-	#return 'this_check(%s)' % self.visit()
+#	return 'this_check(%s)' % ast.This()
 	return 'this'
