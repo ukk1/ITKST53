@@ -54,24 +54,12 @@ libcode = '''
     badwords.includes = includes;
 
     function badword_check(s) {
-/*	    if (typeof s == "function") {
-	    	var ss = eval(s);
-	    	ss = ss.toString();
-	    }
-
-	    else {
-	    	var ss = ss.toString();
-
-	    }
-*/
 	    if (badwords.includes(s)) {
 		    return '__invalid__';
 	    }
 
 	    return s;
     }
-
-
     function this_check(s) {
 	if (s === window) return null;
         return s;

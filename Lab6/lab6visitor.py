@@ -83,7 +83,7 @@ class LabVisitor(object):
             template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-        if  node.op == ':':
+        if  node.op == ':':#node.left == 'ast.Identifier' or node.left == 'ast.String':
 		return template % (
             		self.visit(node.left).replace('sandbox_', ''), node.op, self.visit(node.right))
 	return template % (
@@ -333,7 +333,7 @@ class LabVisitor(object):
         s = template % (self.visit(node.node), self.visit(node.identifier).
 		replace('sandbox_', ''))
 
-	    return s
+	return s
 
     def visit_BracketAccessor(self, node):
         s = '%s[badword_check(%s)]' % (self.visit(node.node), self.visit(node.expr))
