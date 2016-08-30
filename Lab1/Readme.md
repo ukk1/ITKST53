@@ -494,16 +494,6 @@ The web server should have some sort of Access Control List (ACL) in place that 
 
 ###Exercise 6
 
-To protect applications against possible buffer overflow attacks it is recommended to replace any unsafe functions with their safe equivalents:
-
-    strcat() - strlcat()
-    strcpy() - strlcpy()
-    strncat() - strlcat()
-    strncpy() - strlcpy()
-    sprintf() - snprintf() or asprintf()
-    vsprintf() - vsnprintf() or vasprintf()
-    gets() - fgets()
-
 [http.c:105]
 
     url_decode(reqpath, sp1, 2048);
@@ -518,13 +508,13 @@ To protect applications against possible buffer overflow attacks it is recommend
     
 [http.c:282] 
 
-    strlcat(pn, name, sizeof(pn));
+    strncat(pn, name, sizeof(pn) - strlen(pn) - 1);
     
 [http.c:343 - 348]
 
     void dir_join(char *dst, const char *dirname, const char *filename) {
-        strlcpy(dst, dirname, sizeof(dst));
+        strncpy(dst, dirname, sizeof(dst) - 1);
         if (dst[strlen(dst) - 1] != '/')
-            strlcat(dst, "/", sizeof(dst));
-        strlcat(dst, filename, sizeof(dst));
+            strncat(dst, "/", sizeof(dst) - strlen(dst) - 1);
+        strncat(dst, filename, sizeof(dst) - strlen(dst) - 1);
     }
