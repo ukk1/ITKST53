@@ -502,8 +502,8 @@ To protect applications against possible buffer overflow attacks it is recommend
 [http.c:343 - 348]
 
     void dir_join(char *dst, const char *dirname, const char *filename) {
-        strcpy(dst, dirname, sizeof(dst));
+        strlcpy(dst, dirname, sizeof(dst));
         if (dst[strlen(dst) - 1] != '/')
-            strcat(dst, "/", sizeof(path));
-        strcat(dst, filename, sizeof(dst));
+            strlcat(dst, "/", sizeof(dst));
+        strlcat(dst, filename, sizeof(dst));
     }
