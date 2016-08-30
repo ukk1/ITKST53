@@ -482,10 +482,28 @@ The web server should have some sort of Access Control List (ACL) in place that 
 
 To protect applications against possible buffer overflow attacks it is recommended to replace any unsafe functions with their safe equivalents:
 
-    gets() -> fgets() - read characters
-    strcpy() -> strncpy() - copy content of the buffer
-    strcat() -> strncat() - buffer concatenation
-    sprintf() -> snprintf() - fill buffer with data of different types
-    (f)scanf() - read from STDIN
-    getwd() - return working directory
-    realpath() - return absolute (full) path
+    strcat() - strlcat()
+    strcpy() - strlcpy()
+    strncat() - strlcat()
+    strncpy() - strlcpy()
+    sprintf() - snprintf() or asprintf()
+    vsprintf() - vsnprintf() or vasprintf()
+    gets() - fgets()
+
+
+[http.c:165]
+
+    snprintf(envvar, 512, "HTTP_%s", buf);
+    
+[http.c:282] 
+
+    strlcat(pn, name, sizeof(pn));
+    
+[http.c:343 - 348]
+
+    void dir_join(char *dst, const char *dirname, const char *filename) {
+        strcpy(dst, dirname, sizeof(dst));
+        if (dst[strlen(dst) - 1] != '/')
+            strcat(dst, "/", sizeof(path));
+        strcat(dst, filename, sizeof(dst));
+    }
