@@ -497,7 +497,7 @@ To protect applications against possible buffer overflow attacks it is recommend
     
 [http.c:282] 
 
-    strlcat(pn, name, sizeof(pn));
+    strncat(pn, name, sizeof(pn) - strlen(pn) - 1);
     
 [http.c:343 - 348]
 
