@@ -514,7 +514,7 @@ To protect applications against possible buffer overflow attacks it is recommend
 
 [http.c:165]
 
-    snprintf(envvar, 512, "HTTP_%s", buf);
+    snprintf(envvar, sizeof(envvar), "HTTP_%s", buf);
     
 [http.c:282] 
 
