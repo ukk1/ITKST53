@@ -457,6 +457,18 @@ The exploits for this exercise can be found from [exploit-4a.py](https://github.
 
 ###Exercise 5
 
+The Zoobar HTTP server is susceptible to Denial of Service attacks. We can use for example Slow HTTP Request attack to consume all the resources of the web server and thus making it inaccessible to other users. For example, we can use a tool known as slowhttptest, which works like Slowloris attack where we send thousands of HTTP request to reserve all the resources of the web server.
+
+Successful attack results into a following condition with the Zoobar HTTP Server:
+
+    "Internal Server Error
+
+    The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application."
+
+There really is not a protection mechanism in place against DoS attacks. It is possible to introduce rate limiting and other HTTP server specific configurations that handle how long a request is being held with KeepAlive settings etc.
+
+---
+
 There is a local file inclusion vulnerability, which allows us to read files from the zoobar web directory. This vulnerability allows us to go through the source code of the python scripts from the server or other sensitive files, such as passwd. This vulnerability presents a clear security risk since it exposes sensitive configuration files and source code to users.
 
 The web server should have some sort of Access Control List (ACL) in place that checks and validates if users have access or permissions to run specific files in the environment.
