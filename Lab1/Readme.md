@@ -490,6 +490,8 @@ The web server should have some sort of Access Control List (ACL) in place that 
     colord:x:104:110:colord colour management daemon,,,:/var/lib/colord:/bin/false
     httpd:x:1000:1000:Ubuntu,,,:/home/httpd:/bin/bash
 
+---
+
 ###Exercise 6
 
 To protect applications against possible buffer overflow attacks it is recommended to replace any unsafe functions with their safe equivalents:
@@ -502,6 +504,13 @@ To protect applications against possible buffer overflow attacks it is recommend
     vsprintf() - vsnprintf() or vasprintf()
     gets() - fgets()
 
+[http.c:105]
+
+    url_decode(reqpath, sp1, 2048);
+    
+[http.h:35]
+
+    void url_decode(char *dst, const char *src, size_t len);
 
 [http.c:165]
 
