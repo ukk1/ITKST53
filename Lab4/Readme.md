@@ -44,12 +44,27 @@ Password hashing and salting was done by following security practices. They used
     salt = os.urandom(8)
     password_hash = pbkdf2.PBKDF2(password, salt).hexread(32)
 
-They also verified that the given password matches the one stored in the database correctly.
+They also verified that the given password matches the one stored in the database correctly when user logs in.
 
-    if cred.password == pbkdf2.PBKDF2(password, salt).hexread(32):
-        return newtoken(db, cred)
-    else:
-        return None
+    def login(username, password):
+        db = cred_setup()
+        cred = db.query(Cred).get(username)
+        if not cred:
+            return None
+        salt = cred.salt.decode('base64').strip()
+        if cred.password == pbkdf2.PBKDF2(password, salt).hexread(32):
+            return newtoken(db, cred)
+        else:
+            return None
+
+Also when new user registers into the application the code takes care that the password is not stored in cleartext.
+
+    newcred = Cred()
+    newcred.username = username
+    newcred.password = password_hash
+    newcred.salt = salt.encode('base64').strip()
+    cred_db.add(newcred)
+    cred_db.commit()
 
 In the database they also added a new column to store the salt value.
 
