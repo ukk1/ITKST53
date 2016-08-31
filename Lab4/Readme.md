@@ -18,10 +18,24 @@
     -rw-rw---- 1 61012 61016 3072 Aug 24 11:17 person.db
     -rw------- 1 61017 61014 2048 Aug 24 10:10 transfer.db
     
+Comparing the design to our environment there was misconfiguration error regarding the ProfileAPIServer since in our environment we accidentally set the group and user ID to the same value as the bank service.
 
+    class ProfileAPIServer(rpclib.RpcServer):
+        def __init__(self, user, visitor):
+        self.user = user
+        self.visitor = visitor
+        os.chdir('/tmp')
+        os.setgid(61012)
+        os.setuid(61016)
+
+    [bank_svc]
+        cmd = /zoobar/bank-server.py
+        args = /banksvc/sock
+        dir = /jail
+        uid = 61016
+        gid = 61012
 
 ## Exercise 2: Attack Credentials
-
 
 ####Hashing and salting
 
