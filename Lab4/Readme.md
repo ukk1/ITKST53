@@ -39,7 +39,7 @@ Comparing the design to our environment there was misconfiguration error regardi
 
 ####Hashing and salting
 
-Password hashing and salting was done by following security practices. They used the recommended PBKDF2 module and used os.urandom function as advised. They also used the same length for the salt as we did, 8 bytes. 
+Password hashing and salting was done by following good security practices. They used the recommended PBKDF2 module and os.urandom function as advised. They also used the same length for the salt as we did - 8-bytes.
 
     salt = os.urandom(8)
     password_hash = pbkdf2.PBKDF2(password, salt).hexread(32)
