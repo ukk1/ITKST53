@@ -26,3 +26,13 @@ Hashing and salting seems to work properly.
 Token check seems to be verified when transferring.
 
 ## Exercise 3: Attack the Python Sandbox
+
+The sandbox seems to work fine. The system creates separate user directories
+to /jail/userdata/*b64username* 
+I tried but was unable to access another user's folder for example with:
+
+    x = object.__subclasses__()[40]("../dXNlcjI\=/keke.txt").read()
+    print(x)
+    
+In the profile code.
+
