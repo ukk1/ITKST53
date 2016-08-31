@@ -22,8 +22,57 @@
 
 ## Exercise 2: Attack Credentials
 
-Hashing and salting seems to work properly.
-Token check seems to be verified when transferring.
+
+####Hashing and salting
+
+Password hashing and salting was done by following security practices. They used the recommended PBKDF2 module and used os.urandom function as advised. They also used the same length for the salt as we did, 8 bytes. 
+
+    salt = os.urandom(8)
+    password_hash = pbkdf2.PBKDF2(password, salt).hexread(32)
+
+They also verified that the given password matches the one stored in the database correctly.
+
+    if cred.password == pbkdf2.PBKDF2(password, salt).hexread(32):
+        return newtoken(db, cred)
+    else:
+        return None
+
+In the database they also added a new column to store the salt value.
+
+    class Cred(CredBase):
+        __tablename__ = "cred"
+        username = Column(String(128), primary_key=True)
+        password = Column(String(128))
+        token = Column(String(128))
+        salt = Column(String(8))
+
+####Token verification
+
+The tokens were validated properly when transfering zoobars. In our code we did not verified the token in the bank, which was a clear coding error and thus the token was not being validated in the bank. 
+
+The bank service also verifies the tokens before any zoobar transfering is allowed. 
+
+bank_client.py
+
+    def transfer(sender, recipient, zoobars, token):
+    with rpclib.client_connect('/banksvc/sock') as c:
+        return c.call('transfer', sender=sender, recipient=recipient,
+                      zoobars=zoobars, token=token)
+
+bank-server.py
+
+    def rpc_transfer(self, sender, recipient, zoobars, token):
+        return bank.transfer(sender, recipient, zoobars, token)
+
+bank.py
+
+    def transfer(sender, recipient, zoobars, token):
+        bank_db = bank_setup()
+        senderp = bank_db.query(Bank).get(sender)
+        recipientp = bank_db.query(Bank).get(recipient)
+
+        if not auth_client.check_token(senderp.username, token):
+            raise ValueError()
 
 ## Exercise 3: Attack the Python Sandbox
 
